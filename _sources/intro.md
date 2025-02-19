@@ -12,7 +12,7 @@ Nama 	: Yudha Caesar Maulana
 
 Prodi 	: Teknik Informatika
 
-Email 	: Yudha Caesar Maulana
+Email 	: yareksesmemi@gmail.com
 
 
 ```{tableofcontents}
