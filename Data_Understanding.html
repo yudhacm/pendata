@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Proses dalam Memahami Data &#8212; Penambangan Data</title>
+    <title>Data Understanding &#8212; Penambangan Data</title>
   
   
   
@@ -63,6 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'Data_Understanding';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DATA OUTLIER DAN DETEKSI" href="Outlier_Detection.html" />
     <link rel="prev" title="Welcome to Data Mining" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -168,7 +169,8 @@
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>Proses dalam Memahami Data</strong></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>Data Understanding</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outlier_Detection.html">DATA OUTLIER  DAN DETEKSI</a></li>
 </ul>
 
     </div>
@@ -338,7 +340,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -349,11 +353,43 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Proses dalam Memahami Data</h1>
+    <h1>Data Understanding</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manfaat-data-understanding"><strong>Manfaat Data Understanding</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-dalam-memahami-data"><strong>Proses dalam Memahami Data</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pengumpulan-data"><strong>1. Pengumpulan Data</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-mengambil-dan-menampilkan-data-serta-menghapus-file-yang-di-upload-sebelumnya"><strong>b. Mengambil dan menampilkan data serta menghapus file yang di upload sebelumnya</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#c-menggabungkan-data-dari-kedua-database"><strong>c. Menggabungkan Data dari Kedua Database</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#profiling-data"><strong>2. Profiling Data</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-tentang-dataset"><strong>Informasi tentang Dataset</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#korelasi-dan-asosiasi"><strong>3. Korelasi dan Asosiasi</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-hubungan-antar-variabel"><strong>Memahami Hubungan antar Variabel</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eksplorasi-data"><strong>4. Eksplorasi Data</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#indentifikasi-masalah"><strong>5. Indentifikasi Masalah</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mengecek-data-hilang-missing-value"><strong>Mengecek Data Hilang (Missing Value)</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mendeteksi-outliers"><strong>Mendeteksi Outliers</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mengecek-duplikasi-data"><strong>Mengecek Duplikasi Data</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mengecek-inkonsistensi"><strong>Mengecek Inkonsistensi</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -363,7 +399,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p>#<strong>Data Understanding</strong></p>
+  <section class="tex2jax_ignore mathjax_ignore" id="data-understanding">
+<h1><strong>Data Understanding</strong><a class="headerlink" href="#data-understanding" title="Link to this heading">#</a></h1>
 <p><strong>Data Understanding</strong> atau yang biasa disebut dengan <strong>Memahami Data</strong> adalah salah satu tahap penting dalam proses <em>Knowledge Discovery in Databases</em> (KDD) atau Data Mining. Ini merupakan langkah awal yang bertujuan untuk memahami data secara mendalam sebelum melakukan analisis lebih lanjut. Pemahaman data yang baik sangat krusial karena akan memengaruhi keberhasilan seluruh proses data mining.</p>
 <p>Beberapa kegiatan dalam memahami data diantaranya adalah:</p>
 <ul>
@@ -396,7 +433,8 @@
 </ol>
 </li>
 </ul>
-<p>###<strong>Manfaat Data Understanding</strong></p>
+<section id="manfaat-data-understanding">
+<h2><strong>Manfaat Data Understanding</strong><a class="headerlink" href="#manfaat-data-understanding" title="Link to this heading">#</a></h2>
 <ul>
 <li><p>Meningkatkan Kualitas Data</p>
 <p>Dengan memahami masalah data, kita dapat melakukan preprocessing yang lebih efektif</p>
@@ -411,9 +449,11 @@
 <p>Data yang dipahami dengan baik akan menghasilkan model prediktif yang lebih akurat.</p>
 </li>
 </ul>
+</section>
 <section id="proses-dalam-memahami-data">
-<h1><strong>Proses dalam Memahami Data</strong><a class="headerlink" href="#proses-dalam-memahami-data" title="Link to this heading">#</a></h1>
-<p>###<strong>1. Pengumpulan Data</strong></p>
+<h2><strong>Proses dalam Memahami Data</strong><a class="headerlink" href="#proses-dalam-memahami-data" title="Link to this heading">#</a></h2>
+<section id="pengumpulan-data">
+<h3><strong>1. Pengumpulan Data</strong><a class="headerlink" href="#pengumpulan-data" title="Link to this heading">#</a></h3>
 <p>Dataset <strong>IRIS</strong> adalah dataset yang berisi informasi tentang tiga spesies bunga iris (<em>Setosa, Versicolor, Virginica</em>) dengan fitur utama yaitu; panjang dan lebar dari sepal serta petal.</p>
 <p>####<strong>Lokasi Data</strong>
 Teruntuk lokasi dari data <strong>IRIS</strong> berada dalam <strong><a class="reference external" href="http://aiven.io">aiven.io</a></strong> (platform cloud dan AI berbasis open source):</p>
@@ -444,17 +484,7 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pymysql
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading PyMySQL-1.1.1-py3-none-any.whl.metadata (4.4 kB)
-Downloading PyMySQL-1.1.1-py3-none-any.whl (44 kB)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: pymysql
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed pymysql-1.1.1
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pymysql in /usr/local/python/3.12.1/lib/python3.12/site-packages (1.1.1)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">24.3.1</span> -&gt; <span class=" -Color -Color-Green">25.0.1</span>
@@ -473,24 +503,7 @@ Requirement already satisfied: six&gt;=1.5 in /home/codespace/.local/lib/python3
 <span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">python3 -m pip install --upgrade pip</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting psycopg2-binary
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-?25l   <span class=" -Color -Color-C237">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">0.0/3.0 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   <span class=" -Color -Color-Red">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">3.0/3.0 MB</span> <span class=" -Color -Color-Red">44.1 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
-?25h
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: psycopg2-binary
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed psycopg2-binary-2.9.10
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: psycopg2-binary in /usr/local/python/3.12.1/lib/python3.12/site-packages (2.9.10)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">24.3.1</span> -&gt; <span class=" -Color -Color-Green">25.0.1</span>
@@ -498,7 +511,9 @@ Requirement already satisfied: six&gt;=1.5 in /home/codespace/.local/lib/python3
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: sqlalchemy in /usr/local/python/3.12.1/lib/python3.12/site-packages (2.0.38)
-Requirement already satisfied: greenlet!=0.4.17 in /usr/local/python/3.12.1/lib/python3.12/site-packages (from sqlalchemy) (3.1.1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: greenlet!=0.4.17 in /usr/local/python/3.12.1/lib/python3.12/site-packages (from sqlalchemy) (3.1.1)
 Requirement already satisfied: typing-extensions&gt;=4.6.0 in /home/codespace/.local/lib/python3.12/site-packages (from sqlalchemy) (4.12.2)
 </pre></div>
 </div>
@@ -506,19 +521,10 @@ Requirement already satisfied: typing-extensions&gt;=4.6.0 in /home/codespace/.l
 <span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">python3 -m pip install --upgrade pip</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting python-dotenv
-  Downloading python_dotenv-1.0.1-py3-none-any.whl.metadata (23 kB)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: python-dotenv in /usr/local/python/3.12.1/lib/python3.12/site-packages (1.0.1)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading python_dotenv-1.0.1-py3-none-any.whl (19 kB)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: python-dotenv
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed python-dotenv-1.0.1
-
-<span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">24.3.1</span> -&gt; <span class=" -Color -Color-Green">25.0.1</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">24.3.1</span> -&gt; <span class=" -Color -Color-Green">25.0.1</span>
 <span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">python3 -m pip install --upgrade pip</span>
 </pre></div>
 </div>
@@ -631,7 +637,8 @@ Data dari PostgreSQL:
 </div>
 </div>
 </div>
-<p>#####<strong>b. Mengambil dan menampilkan data serta menghapus file yang di upload sebelumnya</strong></p>
+<section id="b-mengambil-dan-menampilkan-data-serta-menghapus-file-yang-di-upload-sebelumnya">
+<h4><strong>b. Mengambil dan menampilkan data serta menghapus file yang di upload sebelumnya</strong><a class="headerlink" href="#b-mengambil-dan-menampilkan-data-serta-menghapus-file-yang-di-upload-sebelumnya" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mysql_query</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM iris_data;&quot;</span>
@@ -673,7 +680,9 @@ Data dari PostgreSQL:
 </div>
 </div>
 </div>
-<p>#####<strong>c. Menggabungkan Data dari Kedua Database</strong></p>
+</section>
+<section id="c-menggabungkan-data-dari-kedua-database">
+<h4><strong>c. Menggabungkan Data dari Kedua Database</strong><a class="headerlink" href="#c-menggabungkan-data-dari-kedua-database" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_combined</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_postgres</span><span class="p">,</span> <span class="n">df_mysql</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]),</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span>
@@ -703,9 +712,13 @@ Data dari PostgreSQL:
 </div>
 </div>
 </div>
-<p>###<strong>2. Profiling Data</strong>
-Profiling data termasuk langkah penting dalam memahami karakteristik dataset sebelum melakukan analisis lebih lanjut.</p>
-<p>####<strong>Informasi tentang Dataset</strong></p>
+</section>
+</section>
+<section id="profiling-data">
+<h3><strong>2. Profiling Data</strong><a class="headerlink" href="#profiling-data" title="Link to this heading">#</a></h3>
+<p>Profiling data termasuk langkah penting dalam memahami karakteristik dataset sebelum melakukan analisis lebih lanjut.</p>
+<section id="informasi-tentang-dataset">
+<h4><strong>Informasi tentang Dataset</strong><a class="headerlink" href="#informasi-tentang-dataset" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p>Menampilkan Informasi Dataset</p></li>
 </ul>
@@ -1059,8 +1072,12 @@ Name: count, dtype: int64
 </div>
 </div>
 </div>
-<p>###<strong>3. Korelasi dan Asosiasi</strong>
-####<strong>Memahami Hubungan antar Variabel</strong></p>
+</section>
+</section>
+<section id="korelasi-dan-asosiasi">
+<h3><strong>3. Korelasi dan Asosiasi</strong><a class="headerlink" href="#korelasi-dan-asosiasi" title="Link to this heading">#</a></h3>
+<section id="memahami-hubungan-antar-variabel">
+<h4><strong>Memahami Hubungan antar Variabel</strong><a class="headerlink" href="#memahami-hubungan-antar-variabel" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p>Menghitung Korelasi antar Variabel Numerik</p></li>
 </ul>
@@ -1131,8 +1148,11 @@ Iris-virginica          6.588        2.974         5.552        2.026
 <img alt="_images/68b1d88fd97623dfe74363be7d6db8de41822ae0159259e46fd57c11b7f18fae.png" src="_images/68b1d88fd97623dfe74363be7d6db8de41822ae0159259e46fd57c11b7f18fae.png" />
 </div>
 </div>
-<p>###<strong>4. Eksplorasi Data</strong>
-Eksplorasi data bertujuan untuk mendeskripsikan statistik untuk memahami distribusi data</p>
+</section>
+</section>
+<section id="eksplorasi-data">
+<h3><strong>4. Eksplorasi Data</strong><a class="headerlink" href="#eksplorasi-data" title="Link to this heading">#</a></h3>
+<p>Eksplorasi data bertujuan untuk mendeskripsikan statistik untuk memahami distribusi data</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_combined</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;50%&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">]]</span>
@@ -1477,9 +1497,12 @@ Eksplorasi data bertujuan untuk mendeskripsikan statistik untuk memahami distrib
 <img alt="_images/64cdf402ce22849d864d5e2ea106593d401493c0dbfeca07657d625734226ff9.png" src="_images/64cdf402ce22849d864d5e2ea106593d401493c0dbfeca07657d625734226ff9.png" />
 </div>
 </div>
-<p>###<strong>5. Indentifikasi Masalah</strong></p>
+</section>
+<section id="indentifikasi-masalah">
+<h3><strong>5. Indentifikasi Masalah</strong><a class="headerlink" href="#indentifikasi-masalah" title="Link to this heading">#</a></h3>
 <p>Mengidentifikasi Masalah jika menemukan potensi kendala dalam dataset yang bisa mempengaruhi analisis dan modeling.</p>
-<p>####<strong>Mengecek Data Hilang (Missing Value)</strong></p>
+<section id="mengecek-data-hilang-missing-value">
+<h4><strong>Mengecek Data Hilang (Missing Value)</strong><a class="headerlink" href="#mengecek-data-hilang-missing-value" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df_combined</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
@@ -1498,7 +1521,9 @@ dtype: int64
 </div>
 </div>
 </div>
-<p>####<strong>Mendeteksi Outliers</strong></p>
+</section>
+<section id="mendeteksi-outliers">
+<h4><strong>Mendeteksi Outliers</strong><a class="headerlink" href="#mendeteksi-outliers" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Memilih hanya kolom numerik</span>
@@ -1526,7 +1551,9 @@ dtype: int64
 </div>
 </div>
 </div>
-<p>####<strong>Mengecek Duplikasi Data</strong></p>
+</section>
+<section id="mengecek-duplikasi-data">
+<h4><strong>Mengecek Duplikasi Data</strong><a class="headerlink" href="#mengecek-duplikasi-data" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df_combined</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
@@ -1539,7 +1566,9 @@ dtype: int64
 </div>
 </div>
 </div>
-<p>####<strong>Mengecek Inkonsistensi</strong></p>
+</section>
+<section id="mengecek-inkonsistensi">
+<h4><strong>Mengecek Inkonsistensi</strong><a class="headerlink" href="#mengecek-inkonsistensi" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cek kategori unik dalam Class</span>
@@ -1590,6 +1619,9 @@ petal width: [&lt;class &#39;float&#39;&gt;]
 </div>
 </div>
 </section>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1630,12 +1662,61 @@ petal width: [&lt;class &#39;float&#39;&gt;]
         <p class="prev-next-title">Welcome to Data Mining</p>
       </div>
     </a>
+    <a class="right-next"
+       href="Outlier_Detection.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">DATA OUTLIER  DAN DETEKSI</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manfaat-data-understanding"><strong>Manfaat Data Understanding</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-dalam-memahami-data"><strong>Proses dalam Memahami Data</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pengumpulan-data"><strong>1. Pengumpulan Data</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-mengambil-dan-menampilkan-data-serta-menghapus-file-yang-di-upload-sebelumnya"><strong>b. Mengambil dan menampilkan data serta menghapus file yang di upload sebelumnya</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#c-menggabungkan-data-dari-kedua-database"><strong>c. Menggabungkan Data dari Kedua Database</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#profiling-data"><strong>2. Profiling Data</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-tentang-dataset"><strong>Informasi tentang Dataset</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#korelasi-dan-asosiasi"><strong>3. Korelasi dan Asosiasi</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-hubungan-antar-variabel"><strong>Memahami Hubungan antar Variabel</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eksplorasi-data"><strong>4. Eksplorasi Data</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#indentifikasi-masalah"><strong>5. Indentifikasi Masalah</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mengecek-data-hilang-missing-value"><strong>Mengecek Data Hilang (Missing Value)</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mendeteksi-outliers"><strong>Mendeteksi Outliers</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mengecek-duplikasi-data"><strong>Mengecek Duplikasi Data</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mengecek-inkonsistensi"><strong>Mengecek Inkonsistensi</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
