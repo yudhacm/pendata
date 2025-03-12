@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>DATA OUTLIER DAN DETEKSI &#8212; Penambangan Data</title>
+    <title>Outlier Detection &#8212; Penambangan Data</title>
   
   
   
@@ -60,10 +60,13 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Outlier_Detection';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Proses dalam Memahami Data" href="Data_Understanding.html" />
+    <link rel="next" title="Local Outlier Factor (LOF)" href="LOF.html" />
+    <link rel="prev" title="Data Understanding" href="Data_Understanding.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -168,8 +171,13 @@
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="Data_Understanding.html"><strong>Proses dalam Memahami Data</strong></a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">DATA OUTLIER  DAN DETEKSI</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="Data_Understanding.html"><strong>Data Understanding</strong></a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">Outlier Detection</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="LOF.html"><strong>Local Outlier Factor (LOF)</strong></a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -352,7 +360,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>DATA OUTLIER  DAN DETEKSI</h1>
+    <h1>Outlier Detection</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -362,21 +370,26 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-outlier">1. Data Outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-data-outlier">1. Apa Itu Data Outlier?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penyebab-munculnya-data-outlier">2. Penyebab Munculnya Data Outlier</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pentingnya-mendeteksi-data-outlier">3. Pentingnya Mendeteksi Data Outlier</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jenis-data-outlier">4. Jenis Data Outlier</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-menggunakan-knn">Deteksi Outlier Menggunakan KNN</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#knn">KNN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-k-nearest-neighbors-knn">Apa itu K-Nearest Neighbors (KNN)?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-nilai-k"><strong>Menentukan Nilai “k”</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-jarak-antara-data-baru-dan-masing-masing-data-lainnya"><strong>Hitung jarak antara data baru dan masing-masing data lainnya</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ambil-tiga-data-dengan-jarak-terdekat"><strong>Ambil tiga data dengan jarak terdekat</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pengumpulan-data"><strong>Pengumpulan Data</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lokasi-data"><strong>Lokasi Data</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-pengumpulan"><strong>Metode Pengumpulan</strong></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-nilai-k">Menentukan Nilai “k”</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-database-postgresql-dari-aiven">Import Database PostgreSQL dari Aiven</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-database-mysql-dari-aiven">Import Database MySQL dari Aiven</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-jarak-dari-menggunakan-encludian-distance">Menghitung Jarak dari Menggunakan Encludian Distance</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#total-outlier">Total Outlier</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-outlier">Tabel Outlier</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-outlier">Visualisasi Outlier</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-database-postgresql-dari-aiven">Import Database PostgreSQL dari Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-database-mysql-dari-aiven">Import Database MySQL dari Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penggabungan-data">Penggabungan data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#program-untuk-mencari-knn">Program untuk mencari KNN</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -388,10 +401,10 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="data-outlier-dan-deteksi">
-<h1>DATA OUTLIER  DAN DETEKSI<a class="headerlink" href="#data-outlier-dan-deteksi" title="Link to this heading">#</a></h1>
-<section id="data-outlier">
-<h2>1. Data Outlier<a class="headerlink" href="#data-outlier" title="Link to this heading">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="outlier-detection">
+<h1>Outlier Detection<a class="headerlink" href="#outlier-detection" title="Link to this heading">#</a></h1>
+<section id="apa-itu-data-outlier">
+<h2>1. Apa Itu Data Outlier?<a class="headerlink" href="#apa-itu-data-outlier" title="Link to this heading">#</a></h2>
 <p>data outlier adalah nilai yang berbeda jauh dari mayoritas data lainnya dalam suatu set, dan keberadaannya dapat memberikan informasi yang berharga atau sebaliknya, menunjukkan adanya kesalahan atau anomali.</p>
 </section>
 <section id="penyebab-munculnya-data-outlier">
@@ -442,34 +455,42 @@ Global outliers, juga dikenal sebagai point anomalies, adalah titik data yang sa
 </section>
 <section id="deteksi-outlier-menggunakan-knn">
 <h2>Deteksi Outlier Menggunakan KNN<a class="headerlink" href="#deteksi-outlier-menggunakan-knn" title="Link to this heading">#</a></h2>
-<section id="knn">
-<h3>KNN<a class="headerlink" href="#knn" title="Link to this heading">#</a></h3>
+<section id="apa-itu-k-nearest-neighbors-knn">
+<h3>Apa itu K-Nearest Neighbors (KNN)?<a class="headerlink" href="#apa-itu-k-nearest-neighbors-knn" title="Link to this heading">#</a></h3>
 <p><strong>K-Nearest Neighbors (KNN)</strong> merupakan sebuah cara untuk mengklasifikasikan dengan cara melihat sesuatu yang berada di dekatnya. KNN juga disebut dengan Algoritna oembelajar malas.  Karena tidak memerlukan pembelajaran terlebih dahulu, dan langsung meyimpan data set dan pada saat klaifikasi melakukan set data. KNN bekerja dengan menggunakan kedekatan dan pemungutan suara mayoritas untuk membuat prediksi atau <em>forecasting</em>. Pada KNN terdapat istilah “k”. “k” merupakan angka yang memberi tahu algoritma beberapa banya titik terdekat (tetangga) yang digunakan untuk membuat keputusan. Contohnya:
 Misalkan menntukan nama buah dan membandingkannya dengan buah yang telah dikenal. kemudian menggunakan nilai “k” sebanyak 3 kemudian 2 dari 3 merupakan buah apel dan 1 dari 3 merupakan buah pisang. jadi algoritma ini mengatakan bahwa buah tersebut merupakan apel karena sebagian besar tetangganya apel.</p>
 </section>
-</section>
 <section id="menentukan-nilai-k">
-<h2>Menentukan Nilai “k”<a class="headerlink" href="#menentukan-nilai-k" title="Link to this heading">#</a></h2>
+<h3><strong>Menentukan Nilai “k”</strong><a class="headerlink" href="#menentukan-nilai-k" title="Link to this heading">#</a></h3>
 <p>Dalam KNN, pemilihan nilai “k” sangat penting untuk menentukan hipotesis hasil dari prediksi. Jika kumpulan data memiliki outlier atau noise yang signifikan, nilai “k” yang lebih tinggi dapat membantu memperhalus prediksi dan mengurangi data yang noise. Namun, pemilihan nilai yang tinggi dapat menyebabkan underfitting.</p>
-<p>Terdapat metode untuk memilih nilai k:</p>
-<ol class="arabic simple">
-<li><p>Validasi Silang
-Merupakan metode yang kuat untuk memilih nilai k. metode ini melibatkan pemisahan data menjadi k subswt yang tersisa, kemudian mengulanginya setiap subset. Nilai k yang dihasilkan memiliki akurasi validasi rata-rata tinggi yang merupakan pilihan terbaik.</p></li>
-<li><p>Metode Elbow
-Metode ini memetakan tingkat kesalahan atau akurasi model untuk nilai k yang berbeda. Pada saat meningkatkan nilai “k”, tingkat kesalahan akan menurun pada awalnya. Pada titik tertentu, tingkat kesalahan mulai menurun lebih lambat.</p></li>
-<li><p>Nilai Ganjil untuk “K”
-Untuk menentukan hasil, disarankan untuk memilih bilangan ganjil untuk menghindari nilai seri pada saat menentukan kelas dan klasifikasi.</p></li>
-</ol>
-<p>###<strong>1. Pengumpulan Data</strong></p>
+<p>Pertama, kita harus menentukan nilai K terlebih dahulu. Penentuan nilai K ini tidak ada rumus pastinya. Namun satu tips yang dapat dipertimbangkan, yakni jika kelas berjumlah genap maka sebaiknya nilai K-nya ganjil, sebaliknya jika kelas berjumlah ganjil maka sebaiknya nilai K-nya genap.
+Dalam prakteknya di Python, Anda dapat menghitung menggunakan kode program untuk mencari nilai K terbaik dari berbagai opsi nilai (misalnya dari K=2 sampai K=10).</p>
+</section>
+<section id="hitung-jarak-antara-data-baru-dan-masing-masing-data-lainnya">
+<h3><strong>Hitung jarak antara data baru dan masing-masing data lainnya</strong><a class="headerlink" href="#hitung-jarak-antara-data-baru-dan-masing-masing-data-lainnya" title="Link to this heading">#</a></h3>
+<p>menghitung jarak menggunakan metode Euclidean distance</p>
+<p><img alt="image.png" src="data:image/png;base64,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" /></p>
+<p>Jika ada lebih dari satu, kita dapat menjumlahkannya seperti di bawah ini.</p>
+<p><img alt="image.png" src="data:image/png;base64,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" /></p>
+</section>
+<section id="ambil-tiga-data-dengan-jarak-terdekat">
+<h3><strong>Ambil tiga data dengan jarak terdekat</strong><a class="headerlink" href="#ambil-tiga-data-dengan-jarak-terdekat" title="Link to this heading">#</a></h3>
+<p>Dari perhitungan Euclidean distance di atas, jika kita rangkum dari jarak terdekat</p>
+</section>
+<section id="pengumpulan-data">
+<h3><strong>Pengumpulan Data</strong><a class="headerlink" href="#pengumpulan-data" title="Link to this heading">#</a></h3>
 <p>Dataset <strong>IRIS</strong> adalah dataset yang berisi informasi tentang tiga spesies bunga iris (<em>Setosa, Versicolor, Virginica</em>) dengan fitur utama yaitu; panjang dan lebar dari sepal serta petal.</p>
-<p>####<strong>Lokasi Data</strong>
-Teruntuk lokasi dari data <strong>IRIS</strong> berada dalam <strong><a class="reference external" href="http://aiven.io">aiven.io</a></strong> (platform cloud dan AI berbasis open source):</p>
+<section id="lokasi-data">
+<h4><strong>Lokasi Data</strong><a class="headerlink" href="#lokasi-data" title="Link to this heading">#</a></h4>
+<p>Teruntuk lokasi dari data <strong>IRIS</strong> berada dalam <strong><a class="reference external" href="http://aiven.io">aiven.io</a></strong> (platform cloud dan AI berbasis open source):</p>
 <ul class="simple">
 <li><p>Data IRIS <em>petal</em> berada di database <strong>MySQL</strong></p></li>
 <li><p>Data IRIS <em>sepal</em> berada di database <strong>PostgreSQL</strong></p></li>
 </ul>
-<p>####<strong>Metode Pengumpulan</strong>
-Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> sebagai berikut:</p>
+</section>
+<section id="metode-pengumpulan">
+<h4><strong>Metode Pengumpulan</strong><a class="headerlink" href="#metode-pengumpulan" title="Link to this heading">#</a></h4>
+<p>Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> sebagai berikut:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">pymysql</span></code></strong> : Digunakan untuk menghubungkan dan mengambil data dari MySQL.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">psycopg2</span></code></strong> : Digunakan untuk menghubungkan dan mengambil data dari PostgreSQL.</p></li>
@@ -525,8 +546,9 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
 </div>
 </div>
 </section>
+</section>
 <section id="import-database-postgresql-dari-aiven">
-<h2>Import Database PostgreSQL dari Aiven<a class="headerlink" href="#import-database-postgresql-dari-aiven" title="Link to this heading">#</a></h2>
+<h3>Import Database PostgreSQL dari Aiven<a class="headerlink" href="#import-database-postgresql-dari-aiven" title="Link to this heading">#</a></h3>
 <p>connect denga isi host, port, name, user dan password dan ambil dari tabel iris_data</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -579,7 +601,7 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
 </div>
 </section>
 <section id="import-database-mysql-dari-aiven">
-<h2>Import Database MySQL dari Aiven<a class="headerlink" href="#import-database-mysql-dari-aiven" title="Link to this heading">#</a></h2>
+<h3>Import Database MySQL dari Aiven<a class="headerlink" href="#import-database-mysql-dari-aiven" title="Link to this heading">#</a></h3>
 <p>connect denga isi host, port, name, user dan password dan ambil dari tabel iris_data</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -617,7 +639,7 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 data dalam tabel iris_data
 (1, &#39;Iris-setosa&#39;, 1.4, 0.2)
-(2, &#39;Iris-setosa&#39;, 14.0, 2.0)
+(2, &#39;Iris-setosa&#39;, 50.0, 20.0)
 (3, &#39;Iris-setosa&#39;, 1.3, 0.2)
 (4, &#39;Iris-setosa&#39;, 1.5, 0.2)
 (5, &#39;Iris-setosa&#39;, 1.4, 0.2)
@@ -631,11 +653,8 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
 </div>
 </div>
 </section>
-<section id="menghitung-jarak-dari-menggunakan-encludian-distance">
-<h2>Menghitung Jarak dari Menggunakan Encludian Distance<a class="headerlink" href="#menghitung-jarak-dari-menggunakan-encludian-distance" title="Link to this heading">#</a></h2>
-<p>Koneksikan kedua database untuk penggabungan tabel dan pengambilan semua kolom data</p>
-<p>Hitung jarak euclidean dengan persentil untuk menentukan data yang termasuk outlier. bisa menggunakan library <strong><code class="docutils literal notranslate"><span class="pre">scipy.spatial.distance</span> <span class="pre">import</span> <span class="pre">euclidean</span></code></strong></p>
-<p>setiap data dengan nilai melebihi treshold akan dianggap sebagai treshold</p>
+<section id="penggabungan-data">
+<h3>Penggabungan data<a class="headerlink" href="#penggabungan-data" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Koneksi ke PostgreSQL dan MySQL</span>
@@ -657,19 +676,8 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
 <span class="n">feature_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;petal_length&quot;</span><span class="p">,</span> <span class="s2">&quot;petal_width&quot;</span><span class="p">,</span> <span class="s2">&quot;sepal_length&quot;</span><span class="p">,</span> <span class="s2">&quot;sepal_width&quot;</span><span class="p">]</span>
 <span class="n">data_values</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="n">feature_columns</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
-<span class="c1"># Ambil referensi dari baris terakhir</span>
-<span class="n">reference_point</span> <span class="o">=</span> <span class="n">data_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="c1"># Fungsi untuk menghitung jarak Euclidean</span>
-<span class="k">def</span> <span class="nf">compute_distances</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">euclidean</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
-
-<span class="c1"># Hitung jarak Euclidean dan tambahkan ke DataFrame</span>
-<span class="n">df_merged</span><span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_distances</span><span class="p">(</span><span class="n">data_values</span><span class="p">,</span> <span class="n">reference_point</span><span class="p">)</span>
-
-<span class="c1"># Tentukan threshold outlier (persentil ke-93.5)</span>
-<span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">df_merged</span><span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">],</span> <span class="mf">93.5</span><span class="p">)</span>
-<span class="n">df_merged</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span>
+<span class="c1"># df_merged[&quot;outlier&quot;] = df_merged[&quot;distance&quot;] &gt; threshold</span>
 
 <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">df_merged</span><span class="o">.</span><span class="n">to_html</span><span class="p">()))</span>
 </pre></div>
@@ -686,8 +694,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <th>petal_width</th>
       <th>sepal_length</th>
       <th>sepal_width</th>
-      <th>distance</th>
-      <th>outlier</th>
     </tr>
   </thead>
   <tbody>
@@ -699,19 +705,15 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.1</td>
       <td>3.5</td>
-      <td>5.424942</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>1</th>
       <td>2</td>
       <td>Iris-setosa</td>
-      <td>14.0</td>
-      <td>2.0</td>
+      <td>50.0</td>
+      <td>20.0</td>
       <td>40.9</td>
       <td>30.0</td>
-      <td>46.407542</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>2</th>
@@ -721,8 +723,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.7</td>
       <td>3.2</td>
-      <td>5.430470</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>3</th>
@@ -732,8 +732,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.6</td>
       <td>3.1</td>
-      <td>5.273519</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>4</th>
@@ -743,8 +741,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.0</td>
       <td>3.6</td>
-      <td>5.485435</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>5</th>
@@ -754,8 +750,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.4</td>
       <td>5.4</td>
       <td>3.9</td>
-      <td>5.288667</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>6</th>
@@ -765,8 +759,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.3</td>
       <td>4.6</td>
       <td>3.4</td>
-      <td>5.412947</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>7</th>
@@ -776,8 +768,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.0</td>
       <td>3.4</td>
-      <td>5.325411</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>8</th>
@@ -787,8 +777,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.4</td>
       <td>2.9</td>
-      <td>5.316014</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>9</th>
@@ -798,8 +786,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.1</td>
       <td>4.9</td>
       <td>3.1</td>
-      <td>5.271622</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>10</th>
@@ -809,8 +795,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.4</td>
       <td>3.7</td>
-      <td>5.423099</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>11</th>
@@ -820,8 +804,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.8</td>
       <td>3.4</td>
-      <td>5.292447</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>12</th>
@@ -831,8 +813,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.1</td>
       <td>4.8</td>
       <td>3.0</td>
-      <td>5.319774</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>13</th>
@@ -842,8 +822,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.1</td>
       <td>4.3</td>
       <td>3.0</td>
-      <td>5.644466</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>14</th>
@@ -853,8 +831,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.8</td>
       <td>4.0</td>
-      <td>5.762812</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>15</th>
@@ -864,8 +840,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.4</td>
       <td>5.7</td>
       <td>4.4</td>
-      <td>5.689464</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>16</th>
@@ -875,8 +849,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.4</td>
       <td>5.4</td>
       <td>3.9</td>
-      <td>5.554278</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>17</th>
@@ -886,8 +858,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.3</td>
       <td>5.1</td>
       <td>3.5</td>
-      <td>5.370289</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>18</th>
@@ -897,8 +867,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.3</td>
       <td>5.7</td>
       <td>3.8</td>
-      <td>5.274467</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>19</th>
@@ -908,8 +876,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.3</td>
       <td>5.1</td>
       <td>3.8</td>
-      <td>5.449771</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>20</th>
@@ -919,8 +885,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.4</td>
       <td>3.4</td>
-      <td>5.145872</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>21</th>
@@ -930,8 +894,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.4</td>
       <td>5.1</td>
       <td>3.7</td>
-      <td>5.346027</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>22</th>
@@ -941,8 +903,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.6</td>
       <td>3.6</td>
-      <td>5.831809</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>23</th>
@@ -952,8 +912,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.5</td>
       <td>5.1</td>
       <td>3.3</td>
-      <td>4.962862</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>24</th>
@@ -963,8 +921,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.8</td>
       <td>3.4</td>
-      <td>5.099020</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>25</th>
@@ -974,8 +930,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.0</td>
       <td>3.0</td>
-      <td>5.088222</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>26</th>
@@ -985,8 +939,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.4</td>
       <td>5.0</td>
       <td>3.4</td>
-      <td>5.146844</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>27</th>
@@ -996,8 +948,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.2</td>
       <td>3.5</td>
-      <td>5.345091</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>28</th>
@@ -1007,8 +957,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.2</td>
       <td>3.4</td>
-      <td>5.367495</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>29</th>
@@ -1018,8 +966,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.7</td>
       <td>3.2</td>
-      <td>5.224940</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>30</th>
@@ -1029,8 +975,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.8</td>
       <td>3.1</td>
-      <td>5.163332</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>31</th>
@@ -1040,8 +984,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.4</td>
       <td>5.4</td>
       <td>3.4</td>
-      <td>5.169139</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>32</th>
@@ -1051,8 +993,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.1</td>
       <td>5.2</td>
       <td>4.1</td>
-      <td>5.704384</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>33</th>
@@ -1062,8 +1002,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.5</td>
       <td>4.2</td>
-      <td>5.746303</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>34</th>
@@ -1073,8 +1011,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.1</td>
       <td>4.9</td>
       <td>3.1</td>
-      <td>5.271622</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>35</th>
@@ -1084,8 +1020,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.0</td>
       <td>3.2</td>
-      <td>5.448853</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>36</th>
@@ -1095,8 +1029,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.5</td>
       <td>3.5</td>
-      <td>5.457105</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>37</th>
@@ -1106,8 +1038,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.1</td>
       <td>4.9</td>
       <td>3.1</td>
-      <td>5.271622</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>38</th>
@@ -1117,8 +1047,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.4</td>
       <td>3.0</td>
-      <td>5.422177</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>39</th>
@@ -1128,8 +1056,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.1</td>
       <td>3.4</td>
-      <td>5.311309</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>40</th>
@@ -1139,8 +1065,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.3</td>
       <td>5.0</td>
       <td>3.5</td>
-      <td>5.453439</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>41</th>
@@ -1150,8 +1074,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.3</td>
       <td>4.5</td>
       <td>2.3</td>
-      <td>5.121523</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>42</th>
@@ -1161,8 +1083,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.4</td>
       <td>3.2</td>
-      <td>5.499091</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>43</th>
@@ -1172,8 +1092,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.6</td>
       <td>5.0</td>
       <td>3.5</td>
-      <td>5.089204</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>44</th>
@@ -1183,8 +1101,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.4</td>
       <td>5.1</td>
       <td>3.8</td>
-      <td>5.139066</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>45</th>
@@ -1194,8 +1110,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.3</td>
       <td>4.8</td>
       <td>3.0</td>
-      <td>5.205766</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>46</th>
@@ -1205,8 +1119,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.1</td>
       <td>3.8</td>
-      <td>5.438750</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>47</th>
@@ -1216,8 +1128,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>4.6</td>
       <td>3.2</td>
-      <td>5.382379</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>48</th>
@@ -1227,8 +1137,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.3</td>
       <td>3.7</td>
-      <td>5.431390</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>49</th>
@@ -1238,8 +1146,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>0.2</td>
       <td>5.0</td>
       <td>3.3</td>
-      <td>5.349766</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>50</th>
@@ -1249,8 +1155,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.4</td>
       <td>7.0</td>
       <td>3.2</td>
-      <td>3.111270</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>51</th>
@@ -1260,8 +1164,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.4</td>
       <td>3.2</td>
-      <td>2.906888</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>52</th>
@@ -1271,8 +1173,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.9</td>
       <td>3.1</td>
-      <td>2.924038</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>53</th>
@@ -1282,8 +1182,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>5.5</td>
       <td>2.3</td>
-      <td>2.569047</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>54</th>
@@ -1293,8 +1191,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.5</td>
       <td>2.8</td>
-      <td>2.621068</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>55</th>
@@ -1304,8 +1200,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>5.7</td>
       <td>2.8</td>
-      <td>2.687006</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>56</th>
@@ -1315,8 +1209,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.6</td>
       <td>6.3</td>
       <td>3.3</td>
-      <td>2.874022</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>57</th>
@@ -1326,8 +1218,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.0</td>
       <td>4.9</td>
       <td>2.4</td>
-      <td>3.293934</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>58</th>
@@ -1337,8 +1227,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>6.6</td>
       <td>2.9</td>
-      <td>2.847806</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>59</th>
@@ -1348,8 +1236,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.4</td>
       <td>5.2</td>
       <td>2.7</td>
-      <td>2.816026</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>60</th>
@@ -1359,8 +1245,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.0</td>
       <td>5.0</td>
       <td>2.0</td>
-      <td>3.006659</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>61</th>
@@ -1370,8 +1254,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>5.9</td>
       <td>3.0</td>
-      <td>2.776689</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>62</th>
@@ -1381,8 +1263,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.0</td>
       <td>6.0</td>
       <td>2.2</td>
-      <td>2.744085</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>63</th>
@@ -1392,8 +1272,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.4</td>
       <td>6.1</td>
       <td>2.9</td>
-      <td>2.664583</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>64</th>
@@ -1403,8 +1281,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>5.6</td>
       <td>2.9</td>
-      <td>3.083829</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>65</th>
@@ -1414,8 +1290,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.4</td>
       <td>6.7</td>
       <td>3.1</td>
-      <td>2.991655</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>66</th>
@@ -1425,8 +1299,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>5.6</td>
       <td>3.0</td>
-      <td>2.700000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>67</th>
@@ -1436,8 +1308,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.0</td>
       <td>5.8</td>
       <td>2.7</td>
-      <td>2.954657</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>68</th>
@@ -1447,8 +1317,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.2</td>
       <td>2.2</td>
-      <td>2.202272</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>69</th>
@@ -1458,8 +1326,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.1</td>
       <td>5.6</td>
       <td>2.5</td>
-      <td>2.853069</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>70</th>
@@ -1469,8 +1335,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>5.9</td>
       <td>3.2</td>
-      <td>2.626785</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>71</th>
@@ -1480,8 +1344,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>6.1</td>
       <td>2.8</td>
-      <td>2.854820</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>72</th>
@@ -1491,8 +1353,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.3</td>
       <td>2.5</td>
-      <td>2.330236</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>73</th>
@@ -1502,8 +1362,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.2</td>
       <td>6.1</td>
       <td>2.8</td>
-      <td>2.736786</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>74</th>
@@ -1513,8 +1371,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>6.4</td>
       <td>2.9</td>
-      <td>2.867054</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>75</th>
@@ -1524,8 +1380,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.4</td>
       <td>6.6</td>
       <td>3.0</td>
-      <td>2.893095</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>76</th>
@@ -1535,8 +1389,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.4</td>
       <td>6.8</td>
       <td>2.8</td>
-      <td>2.751363</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>77</th>
@@ -1546,8 +1398,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.7</td>
       <td>6.7</td>
       <td>3.0</td>
-      <td>2.658947</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>78</th>
@@ -1557,8 +1407,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.0</td>
       <td>2.9</td>
-      <td>2.626785</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>79</th>
@@ -1568,8 +1416,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.0</td>
       <td>5.7</td>
       <td>2.6</td>
-      <td>3.157531</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>80</th>
@@ -1579,8 +1425,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.1</td>
       <td>5.5</td>
       <td>2.4</td>
-      <td>2.854820</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>81</th>
@@ -1590,8 +1434,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.0</td>
       <td>5.5</td>
       <td>2.4</td>
-      <td>2.974895</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>82</th>
@@ -1601,8 +1443,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.2</td>
       <td>5.8</td>
       <td>2.7</td>
-      <td>2.886174</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>83</th>
@@ -1612,8 +1452,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.6</td>
       <td>6.0</td>
       <td>2.7</td>
-      <td>2.343075</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>84</th>
@@ -1623,8 +1461,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>5.4</td>
       <td>3.0</td>
-      <td>2.722132</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>85</th>
@@ -1634,8 +1470,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.6</td>
       <td>6.0</td>
       <td>3.4</td>
-      <td>2.952965</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>86</th>
@@ -1645,8 +1479,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.7</td>
       <td>3.1</td>
-      <td>2.875761</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>87</th>
@@ -1656,8 +1488,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>6.3</td>
       <td>2.3</td>
-      <td>2.457641</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>88</th>
@@ -1667,8 +1497,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>5.6</td>
       <td>3.0</td>
-      <td>2.941088</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>89</th>
@@ -1678,8 +1506,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>5.5</td>
       <td>2.5</td>
-      <td>2.675818</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>90</th>
@@ -1689,8 +1515,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.2</td>
       <td>5.5</td>
       <td>2.6</td>
-      <td>2.672078</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>91</th>
@@ -1700,8 +1524,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.4</td>
       <td>6.1</td>
       <td>3.0</td>
-      <td>2.753180</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>92</th>
@@ -1711,8 +1533,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.2</td>
       <td>5.8</td>
       <td>2.6</td>
-      <td>2.787472</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>93</th>
@@ -1722,8 +1542,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.0</td>
       <td>5.0</td>
       <td>2.3</td>
-      <td>3.226453</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>94</th>
@@ -1733,8 +1551,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>5.6</td>
       <td>2.7</td>
-      <td>2.711088</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>95</th>
@@ -1744,8 +1560,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.2</td>
       <td>5.7</td>
       <td>3.0</td>
-      <td>2.969848</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>96</th>
@@ -1755,8 +1569,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>5.7</td>
       <td>2.9</td>
-      <td>2.835489</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>97</th>
@@ -1766,8 +1578,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>6.2</td>
       <td>2.9</td>
-      <td>2.831960</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>98</th>
@@ -1777,8 +1587,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.1</td>
       <td>5.1</td>
       <td>2.5</td>
-      <td>3.400000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>99</th>
@@ -1788,8 +1596,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.3</td>
       <td>5.7</td>
       <td>2.8</td>
-      <td>2.803569</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>100</th>
@@ -1799,8 +1605,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.5</td>
       <td>6.3</td>
       <td>3.3</td>
-      <td>2.615339</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>101</th>
@@ -1810,8 +1614,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.9</td>
       <td>5.8</td>
       <td>2.7</td>
-      <td>2.140093</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>102</th>
@@ -1821,8 +1623,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.1</td>
       <td>7.1</td>
       <td>3.0</td>
-      <td>2.745906</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>103</th>
@@ -1832,8 +1632,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>6.3</td>
       <td>2.9</td>
-      <td>2.463737</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>104</th>
@@ -1843,8 +1641,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.2</td>
       <td>6.5</td>
       <td>3.0</td>
-      <td>2.445404</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>105</th>
@@ -1854,8 +1650,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.1</td>
       <td>7.6</td>
       <td>3.0</td>
-      <td>3.271085</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>106</th>
@@ -1865,8 +1659,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.7</td>
       <td>4.9</td>
       <td>2.5</td>
-      <td>2.381176</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>107</th>
@@ -1876,8 +1668,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>7.3</td>
       <td>2.9</td>
-      <td>3.043025</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>108</th>
@@ -1887,8 +1677,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>6.7</td>
       <td>2.5</td>
-      <td>2.347339</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>109</th>
@@ -1898,8 +1686,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.5</td>
       <td>7.2</td>
       <td>3.6</td>
-      <td>3.195309</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>110</th>
@@ -1909,8 +1695,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.0</td>
       <td>6.5</td>
       <td>3.2</td>
-      <td>2.601922</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>111</th>
@@ -1920,8 +1704,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.9</td>
       <td>6.4</td>
       <td>2.7</td>
-      <td>2.231591</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>112</th>
@@ -1931,8 +1713,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.1</td>
       <td>6.8</td>
       <td>3.0</td>
-      <td>2.523886</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>113</th>
@@ -1942,8 +1722,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.0</td>
       <td>5.7</td>
       <td>2.5</td>
-      <td>1.926136</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>114</th>
@@ -1953,8 +1731,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.4</td>
       <td>5.8</td>
       <td>2.8</td>
-      <td>1.969772</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>115</th>
@@ -1964,8 +1740,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.3</td>
       <td>6.4</td>
       <td>3.2</td>
-      <td>2.459675</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>116</th>
@@ -1975,8 +1749,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>6.5</td>
       <td>3.0</td>
-      <td>2.570992</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>117</th>
@@ -1986,8 +1758,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.2</td>
       <td>7.7</td>
       <td>3.8</td>
-      <td>3.874274</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>118</th>
@@ -1997,8 +1767,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.3</td>
       <td>7.7</td>
       <td>2.6</td>
-      <td>3.196873</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>119</th>
@@ -2008,8 +1776,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.0</td>
       <td>2.2</td>
-      <td>2.092845</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>120</th>
@@ -2019,8 +1785,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.3</td>
       <td>6.9</td>
       <td>3.2</td>
-      <td>2.687006</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>121</th>
@@ -2030,8 +1794,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.0</td>
       <td>5.6</td>
       <td>2.8</td>
-      <td>2.181742</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>122</th>
@@ -2041,8 +1803,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.0</td>
       <td>7.7</td>
       <td>2.8</td>
-      <td>3.293934</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>123</th>
@@ -2052,8 +1812,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>6.3</td>
       <td>2.7</td>
-      <td>2.267157</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>124</th>
@@ -2063,8 +1821,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.1</td>
       <td>6.7</td>
       <td>3.3</td>
-      <td>2.769476</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>125</th>
@@ -2074,8 +1830,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>7.2</td>
       <td>3.2</td>
-      <td>3.093542</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>126</th>
@@ -2085,8 +1839,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>6.2</td>
       <td>2.8</td>
-      <td>2.334524</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>127</th>
@@ -2096,8 +1848,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>6.1</td>
       <td>3.0</td>
-      <td>2.467793</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>128</th>
@@ -2107,8 +1857,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.1</td>
       <td>6.4</td>
       <td>2.8</td>
-      <td>2.249444</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>129</th>
@@ -2118,8 +1866,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.6</td>
       <td>7.2</td>
       <td>3.0</td>
-      <td>3.001666</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>130</th>
@@ -2129,8 +1875,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.9</td>
       <td>7.4</td>
       <td>2.8</td>
-      <td>2.913760</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>131</th>
@@ -2140,8 +1884,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.0</td>
       <td>7.9</td>
       <td>3.8</td>
-      <td>3.921734</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>132</th>
@@ -2151,8 +1893,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.2</td>
       <td>6.4</td>
       <td>2.8</td>
-      <td>2.202272</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>133</th>
@@ -2162,8 +1902,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.5</td>
       <td>6.3</td>
       <td>2.8</td>
-      <td>2.525866</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>134</th>
@@ -2173,8 +1911,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.4</td>
       <td>6.1</td>
       <td>2.6</td>
-      <td>2.477902</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>135</th>
@@ -2184,8 +1920,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.3</td>
       <td>7.7</td>
       <td>3.0</td>
-      <td>3.069202</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>136</th>
@@ -2195,8 +1929,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.4</td>
       <td>6.3</td>
       <td>3.4</td>
-      <td>2.626785</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>137</th>
@@ -2206,8 +1938,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>6.4</td>
       <td>3.1</td>
-      <td>2.624881</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>138</th>
@@ -2217,8 +1947,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>6.0</td>
       <td>3.0</td>
-      <td>2.467793</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>139</th>
@@ -2228,8 +1956,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.1</td>
       <td>6.9</td>
       <td>3.1</td>
-      <td>2.630589</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>140</th>
@@ -2239,8 +1965,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.4</td>
       <td>6.7</td>
       <td>3.1</td>
-      <td>2.471841</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>141</th>
@@ -2250,8 +1974,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.3</td>
       <td>6.9</td>
       <td>3.1</td>
-      <td>2.535744</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>142</th>
@@ -2261,8 +1983,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.9</td>
       <td>5.8</td>
       <td>2.7</td>
-      <td>2.140093</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>143</th>
@@ -2272,8 +1992,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.3</td>
       <td>6.8</td>
       <td>3.2</td>
-      <td>2.700000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>144</th>
@@ -2283,8 +2001,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.5</td>
       <td>6.7</td>
       <td>3.3</td>
-      <td>2.636285</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>145</th>
@@ -2294,8 +2010,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.3</td>
       <td>6.7</td>
       <td>3.0</td>
-      <td>2.372762</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>146</th>
@@ -2305,8 +2019,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.9</td>
       <td>6.3</td>
       <td>2.5</td>
-      <td>2.049390</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>147</th>
@@ -2316,8 +2028,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.0</td>
       <td>6.5</td>
       <td>3.0</td>
-      <td>2.437212</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>148</th>
@@ -2327,8 +2037,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>2.3</td>
       <td>6.2</td>
       <td>3.4</td>
-      <td>2.611513</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>149</th>
@@ -2338,8 +2046,6 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>1.8</td>
       <td>5.9</td>
       <td>3.0</td>
-      <td>2.443358</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>150</th>
@@ -2349,204 +2055,428 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <td>3.2</td>
       <td>5.8</td>
       <td>1.0</td>
-      <td>0.000000</td>
-      <td>False</td>
     </tr>
   </tbody>
 </table></div></div>
 </div>
 </section>
-<section id="total-outlier">
-<h2>Total Outlier<a class="headerlink" href="#total-outlier" title="Link to this heading">#</a></h2>
-<p>Dari perhitungan diatas terdapat 10 outlier dengan menggunakan fungsi sum</p>
+<section id="program-untuk-mencari-knn">
+<h3>Program untuk mencari KNN<a class="headerlink" href="#program-untuk-mencari-knn" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hitung total outlier</span>
-<span class="n">total_outliers</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Outlier: </span><span class="si">{</span><span class="n">total_outliers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># jumlah tetangga yang kamu mau</span>
+<span class="n">hasil</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_merged</span><span class="p">)):</span>
+    <span class="n">jarak</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_merged</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>  <span class="c1"># supaya tidak membandingkan diri sendiri</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="p">((</span><span class="n">df_merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;petal_length&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;petal_length&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span>
+                     <span class="p">(</span><span class="n">df_merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;petal_width&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;petal_width&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span>
+                     <span class="p">(</span><span class="n">df_merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;sepal_length&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;sepal_length&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span>
+                     <span class="p">(</span><span class="n">df_merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;sepal_width&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;sepal_width&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+            <span class="n">jarak</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
+
+    <span class="n">jarak</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>  <span class="c1"># urutkan jarak</span>
+    <span class="n">avg_distance</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">jarak</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span> <span class="o">/</span> <span class="n">k</span>  <span class="c1"># ambil k tetangga terdekat</span>
+    <span class="n">hasil</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg_distance</span><span class="p">)</span>
+
+<span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hasil</span>
+
+<span class="c1"># Deteksi outlier (misalnya, data dengan jarak rata-rata &gt; threshold tertentu)</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.9999</span><span class="p">)</span>  <span class="c1"># ambil threshold 99% persentil</span>
+<span class="n">outliers</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span>
+<span class="c1"># Menampilkan semua baris hasil perhitungan KNN</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hasil perhitungan jarak rata-rata (KNN):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">df_merged</span><span class="p">[[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;petal_length&#39;</span><span class="p">,</span> <span class="s1">&#39;petal_width&#39;</span><span class="p">,</span> <span class="s1">&#39;sepal_length&#39;</span><span class="p">,</span> <span class="s1">&#39;sepal_width&#39;</span><span class="p">,</span> <span class="s1">&#39;avg_distance&#39;</span><span class="p">]],</span>
+               <span class="n">headers</span><span class="o">=</span><span class="s1">&#39;keys&#39;</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;grid&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total Outlier: 10
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hasil perhitungan jarak rata-rata (KNN):
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|     |   id |   petal_length |   petal_width |   sepal_length |   sepal_width |   avg_distance |
++=====+======+================+===============+================+===============+================+
+|   0 |    1 |            1.4 |           0.2 |            5.1 |           3.5 |       0.127614 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   1 |    2 |           50   |          20   |           40.9 |          30   |      63.2578   |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   2 |    3 |            1.3 |           0.2 |            4.7 |           3.2 |       0.216982 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   3 |    4 |            1.5 |           0.2 |            4.6 |           3.1 |       0.179411 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   4 |    5 |            1.4 |           0.2 |            5   |           3.6 |       0.162611 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   5 |    6 |            1.7 |           0.4 |            5.4 |           3.9 |       0.346209 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   6 |    7 |            1.4 |           0.3 |            4.6 |           3.4 |       0.262727 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   7 |    8 |            1.5 |           0.2 |            5   |           3.4 |       0.138209 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   8 |    9 |            1.4 |           0.2 |            4.4 |           2.9 |       0.25255  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|   9 |   10 |            1.5 |           0.1 |            4.9 |           3.1 |       0.057735 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  10 |   11 |            1.5 |           0.2 |            5.4 |           3.7 |       0.227614 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  11 |   12 |            1.6 |           0.2 |            4.8 |           3.4 |       0.243352 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  12 |   13 |            1.4 |           0.1 |            4.8 |           3   |       0.173205 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  13 |   14 |            1.1 |           0.1 |            4.3 |           3   |       0.302529 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  14 |   15 |            1.2 |           0.2 |            5.8 |           4   |       0.476358 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  15 |   16 |            1.5 |           0.4 |            5.7 |           4.4 |       0.50824  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  16 |   17 |            1.3 |           0.4 |            5.4 |           3.9 |       0.364755 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  17 |   18 |            1.4 |           0.3 |            5.1 |           3.5 |       0.138209 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  18 |   19 |            1.7 |           0.3 |            5.7 |           3.8 |       0.396001 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  19 |   20 |            1.5 |           0.3 |            5.1 |           3.8 |       0.175931 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  20 |   21 |            1.7 |           0.2 |            5.4 |           3.4 |       0.314466 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  21 |   22 |            1.5 |           0.4 |            5.1 |           3.7 |       0.21044  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  22 |   23 |            1   |           0.2 |            4.6 |           3.6 |       0.495925 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  23 |   24 |            1.7 |           0.5 |            5.1 |           3.3 |       0.27958  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  24 |   25 |            1.9 |           0.2 |            4.8 |           3.4 |       0.362159 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  25 |   26 |            1.6 |           0.2 |            5   |           3   |       0.2      |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  26 |   27 |            1.6 |           0.4 |            5   |           3.4 |       0.215738 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  27 |   28 |            1.5 |           0.2 |            5.2 |           3.5 |       0.141421 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  28 |   29 |            1.4 |           0.2 |            5.2 |           3.4 |       0.141421 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  29 |   30 |            1.6 |           0.2 |            4.7 |           3.2 |       0.179411 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  30 |   31 |            1.6 |           0.2 |            4.8 |           3.1 |       0.162611 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  31 |   32 |            1.5 |           0.4 |            5.4 |           3.4 |       0.294281 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  32 |   33 |            1.5 |           0.1 |            5.2 |           4.1 |       0.355662 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  33 |   34 |            1.4 |           0.2 |            5.5 |           4.2 |       0.364755 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  34 |   35 |            1.5 |           0.1 |            4.9 |           3.1 |       0.057735 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  35 |   36 |            1.2 |           0.2 |            5   |           3.2 |       0.290499 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  36 |   37 |            1.3 |           0.2 |            5.5 |           3.5 |       0.315963 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  37 |   38 |            1.5 |           0.1 |            4.9 |           3.1 |       0.057735 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  38 |   39 |            1.3 |           0.2 |            4.4 |           3   |       0.195457 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  39 |   40 |            1.5 |           0.2 |            5.1 |           3.4 |       0.127614 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  40 |   41 |            1.3 |           0.3 |            5   |           3.5 |       0.162611 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  41 |   42 |            1.3 |           0.3 |            4.5 |           2.3 |       0.702252 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  42 |   43 |            1.3 |           0.2 |            4.4 |           3.2 |       0.241202 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  43 |   44 |            1.6 |           0.6 |            5   |           3.5 |       0.268137 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  44 |   45 |            1.9 |           0.4 |            5.1 |           3.8 |       0.382344 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  45 |   46 |            1.4 |           0.3 |            4.8 |           3   |       0.236508 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  46 |   47 |            1.6 |           0.2 |            5.1 |           3.8 |       0.21044  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  47 |   48 |            1.4 |           0.2 |            4.6 |           3.2 |       0.168817 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  48 |   49 |            1.5 |           0.2 |            5.3 |           3.7 |       0.189519 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  49 |   50 |            1.4 |           0.2 |            5   |           3.3 |       0.179411 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  50 |   51 |            4.7 |           1.4 |            7   |           3.2 |       0.344043 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  51 |   52 |            4.5 |           1.5 |            6.4 |           3.2 |       0.309071 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  52 |   53 |            4.9 |           1.5 |            6.9 |           3.1 |       0.287882 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  53 |   54 |            4   |           1.3 |            5.5 |           2.3 |       0.272076 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  54 |   55 |            4.6 |           1.5 |            6.5 |           2.8 |       0.311781 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  55 |   56 |            4.5 |           1.3 |            5.7 |           2.8 |       0.310819 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  56 |   57 |            4.7 |           1.6 |            6.3 |           3.3 |       0.354335 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  57 |   58 |            3.3 |           1   |            4.9 |           2.4 |       0.328992 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  58 |   59 |            4.6 |           1.3 |            6.6 |           2.9 |       0.268709 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  59 |   60 |            3.9 |           1.4 |            5.2 |           2.7 |       0.472272 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  60 |   61 |            3.5 |           1   |            5   |           2   |       0.496544 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  61 |   62 |            4.2 |           1.5 |            5.9 |           3   |       0.330739 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  62 |   63 |            4   |           1   |            6   |           2.2 |       0.519079 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  63 |   64 |            4.7 |           1.4 |            6.1 |           2.9 |       0.203326 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  64 |   65 |            3.6 |           1.3 |            5.6 |           2.9 |       0.46046  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  65 |   66 |            4.4 |           1.4 |            6.7 |           3.1 |       0.257959 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  66 |   67 |            4.5 |           1.5 |            5.6 |           3   |       0.295766 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  67 |   68 |            4.1 |           1   |            5.8 |           2.7 |       0.286485 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  68 |   69 |            4.5 |           1.5 |            6.2 |           2.2 |       0.437665 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  69 |   70 |            3.9 |           1.1 |            5.6 |           2.5 |       0.227576 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  70 |   71 |            4.8 |           1.8 |            5.9 |           3.2 |       0.294721 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  71 |   72 |            4   |           1.3 |            6.1 |           2.8 |       0.350746 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  72 |   73 |            4.9 |           1.5 |            6.3 |           2.5 |       0.377807 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  73 |   74 |            4.7 |           1.2 |            6.1 |           2.8 |       0.303635 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  74 |   75 |            4.3 |           1.3 |            6.4 |           2.9 |       0.275043 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  75 |   76 |            4.4 |           1.4 |            6.6 |           3   |       0.216982 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  76 |   77 |            4.8 |           1.4 |            6.8 |           2.8 |       0.336349 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  77 |   78 |            5   |           1.7 |            6.7 |           3   |       0.367568 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  78 |   79 |            4.5 |           1.5 |            6   |           2.9 |       0.25887  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  79 |   80 |            3.5 |           1   |            5.7 |           2.6 |       0.402188 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  80 |   81 |            3.8 |           1.1 |            5.5 |           2.4 |       0.204875 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  81 |   82 |            3.7 |           1   |            5.5 |           2.4 |       0.250802 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  82 |   83 |            3.9 |           1.2 |            5.8 |           2.7 |       0.229613 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  83 |   84 |            5.1 |           1.6 |            6   |           2.7 |       0.350924 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  84 |   85 |            4.5 |           1.5 |            5.4 |           3   |       0.363965 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  85 |   86 |            4.5 |           1.6 |            6   |           3.4 |       0.418896 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  86 |   87 |            4.7 |           1.5 |            6.7 |           3.1 |       0.305099 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  87 |   88 |            4.4 |           1.3 |            6.3 |           2.3 |       0.47688  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  88 |   89 |            4.1 |           1.3 |            5.6 |           3   |       0.190006 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  89 |   90 |            4   |           1.3 |            5.5 |           2.5 |       0.248316 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  90 |   91 |            4.4 |           1.2 |            5.5 |           2.6 |       0.335022 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  91 |   92 |            4.6 |           1.4 |            6.1 |           3   |       0.213807 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  92 |   93 |            4   |           1.2 |            5.8 |           2.6 |       0.216982 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  93 |   94 |            3.3 |           1   |            5   |           2.3 |       0.296425 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  94 |   95 |            4.2 |           1.3 |            5.6 |           2.7 |       0.220462 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  95 |   96 |            4.2 |           1.2 |            5.7 |           3   |       0.186525 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  96 |   97 |            4.2 |           1.3 |            5.7 |           2.9 |       0.152016 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  97 |   98 |            4.3 |           1.3 |            6.2 |           2.9 |       0.292691 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  98 |   99 |            3   |           1.1 |            5.1 |           2.5 |       0.498569 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+|  99 |  100 |            4.1 |           1.3 |            5.7 |           2.8 |       0.179411 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 100 |  101 |            6   |           2.5 |            6.3 |           3.3 |       0.478055 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 101 |  102 |            5.1 |           1.9 |            5.8 |           2.7 |       0.193601 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 102 |  103 |            5.9 |           2.1 |            7.1 |           3   |       0.39987  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 103 |  104 |            5.6 |           1.8 |            6.3 |           2.9 |       0.273853 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 104 |  105 |            5.8 |           2.2 |            6.5 |           3   |       0.325594 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 105 |  106 |            6.6 |           2.1 |            7.6 |           3   |       0.447149 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 106 |  107 |            4.5 |           1.7 |            4.9 |           2.5 |       0.763383 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 107 |  108 |            6.3 |           1.8 |            7.3 |           2.9 |       0.409872 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 108 |  109 |            5.8 |           1.8 |            6.7 |           2.5 |       0.591073 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 109 |  110 |            6.1 |           2.5 |            7.2 |           3.6 |       0.670128 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 110 |  111 |            5.1 |           2   |            6.5 |           3.2 |       0.340679 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 111 |  112 |            5.3 |           1.9 |            6.4 |           2.7 |       0.364914 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 112 |  113 |            5.5 |           2.1 |            6.8 |           3   |       0.29339  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 113 |  114 |            5   |           2   |            5.7 |           2.5 |       0.286938 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 114 |  115 |            5.1 |           2.4 |            5.8 |           2.8 |       0.503234 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 115 |  116 |            5.3 |           2.3 |            6.4 |           3.2 |       0.349444 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 116 |  117 |            5.5 |           1.8 |            6.5 |           3   |       0.248975 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 117 |  118 |            6.7 |           2.2 |            7.7 |           3.8 |       0.697026 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 118 |  119 |            6.9 |           2.3 |            7.7 |           2.6 |       0.618153 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 119 |  120 |            5   |           1.5 |            6   |           2.2 |       0.498007 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 120 |  121 |            5.7 |           2.3 |            6.9 |           3.2 |       0.262727 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 121 |  122 |            4.9 |           2   |            5.6 |           2.8 |       0.321373 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 122 |  123 |            6.7 |           2   |            7.7 |           2.8 |       0.428387 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 123 |  124 |            4.9 |           1.8 |            6.3 |           2.7 |       0.25957  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 124 |  125 |            5.7 |           2.1 |            6.7 |           3.3 |       0.330131 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 125 |  126 |            6   |           1.8 |            7.2 |           3.2 |       0.389866 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 126 |  127 |            4.8 |           1.8 |            6.2 |           2.8 |       0.233666 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 127 |  128 |            4.9 |           1.8 |            6.1 |           3   |       0.223071 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 128 |  129 |            5.6 |           2.1 |            6.4 |           2.8 |       0.249297 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 129 |  130 |            5.8 |           1.6 |            7.2 |           3   |       0.458642 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 130 |  131 |            6.1 |           1.9 |            7.4 |           2.8 |       0.397291 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 131 |  132 |            6.4 |           2   |            7.9 |           3.8 |       0.740949 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 132 |  133 |            5.6 |           2.2 |            6.4 |           2.8 |       0.274755 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 133 |  134 |            5.1 |           1.5 |            6.3 |           2.8 |       0.355461 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 134 |  135 |            5.6 |           1.4 |            6.1 |           2.6 |       0.559463 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 135 |  136 |            6.1 |           2.3 |            7.7 |           3   |       0.583188 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 136 |  137 |            5.6 |           2.4 |            6.3 |           3.4 |       0.35217  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 137 |  138 |            5.5 |           1.8 |            6.4 |           3.1 |       0.25789  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 138 |  139 |            4.8 |           1.8 |            6   |           3   |       0.215957 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 139 |  140 |            5.4 |           2.1 |            6.9 |           3.1 |       0.298105 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 140 |  141 |            5.6 |           2.4 |            6.7 |           3.1 |       0.285311 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 141 |  142 |            5.1 |           2.3 |            6.9 |           3.1 |       0.358182 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 142 |  143 |            5.1 |           1.9 |            5.8 |           2.7 |       0.193601 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 143 |  144 |            5.9 |           2.3 |            6.8 |           3.2 |       0.285354 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 144 |  145 |            5.7 |           2.5 |            6.7 |           3.3 |       0.287059 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 145 |  146 |            5.2 |           2.3 |            6.7 |           3   |       0.32202  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 146 |  147 |            5   |           1.9 |            6.3 |           2.5 |       0.335471 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 147 |  148 |            5.2 |           2   |            6.5 |           3   |       0.310191 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 148 |  149 |            5.4 |           2.3 |            6.2 |           3.4 |       0.367242 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 149 |  150 |            5.1 |           1.8 |            5.9 |           3   |       0.310244 |
++-----+------+----------------+---------------+----------------+---------------+----------------+
+| 150 |  151 |            5.1 |           3.2 |            5.8 |           1   |       1.98177  |
++-----+------+----------------+---------------+----------------+---------------+----------------+
 </pre></div>
 </div>
 </div>
 </div>
-</section>
-<section id="tabel-outlier">
-<h2>Tabel Outlier<a class="headerlink" href="#tabel-outlier" title="Link to this heading">#</a></h2>
-<p>Tampilan untuk tabel outlier. anda dapat menggunakan dari library  <strong><code class="docutils literal notranslate"><span class="pre">IPython.display</span> <span class="pre">mport</span> <span class="pre">display,</span> <span class="pre">HTML</span></code></strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_outliers</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="n">df_merged</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]]</span>
-
-<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">df_outliers</span><span class="o">.</span><span class="n">to_html</span><span class="p">()))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data yang diduga outlier:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">outliers</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="s1">&#39;keys&#39;</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;grid&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>id</th>
-      <th>class</th>
-      <th>petal_length</th>
-      <th>petal_width</th>
-      <th>sepal_length</th>
-      <th>sepal_width</th>
-      <th>distance</th>
-      <th>outlier</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-      <td>Iris-setosa</td>
-      <td>14.0</td>
-      <td>2.0</td>
-      <td>40.9</td>
-      <td>30.0</td>
-      <td>46.407542</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>5</td>
-      <td>Iris-setosa</td>
-      <td>1.4</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>3.6</td>
-      <td>5.485435</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>14</td>
-      <td>Iris-setosa</td>
-      <td>1.1</td>
-      <td>0.1</td>
-      <td>4.3</td>
-      <td>3.0</td>
-      <td>5.644466</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>15</td>
-      <td>Iris-setosa</td>
-      <td>1.2</td>
-      <td>0.2</td>
-      <td>5.8</td>
-      <td>4.0</td>
-      <td>5.762812</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>16</td>
-      <td>Iris-setosa</td>
-      <td>1.5</td>
-      <td>0.4</td>
-      <td>5.7</td>
-      <td>4.4</td>
-      <td>5.689464</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>17</td>
-      <td>Iris-setosa</td>
-      <td>1.3</td>
-      <td>0.4</td>
-      <td>5.4</td>
-      <td>3.9</td>
-      <td>5.554278</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>23</td>
-      <td>Iris-setosa</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>4.6</td>
-      <td>3.6</td>
-      <td>5.831809</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>33</td>
-      <td>Iris-setosa</td>
-      <td>1.5</td>
-      <td>0.1</td>
-      <td>5.2</td>
-      <td>4.1</td>
-      <td>5.704384</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>33</th>
-      <td>34</td>
-      <td>Iris-setosa</td>
-      <td>1.4</td>
-      <td>0.2</td>
-      <td>5.5</td>
-      <td>4.2</td>
-      <td>5.746303</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>42</th>
-      <td>43</td>
-      <td>Iris-setosa</td>
-      <td>1.3</td>
-      <td>0.2</td>
-      <td>4.4</td>
-      <td>3.2</td>
-      <td>5.499091</td>
-      <td>True</td>
-    </tr>
-  </tbody>
-</table></div></div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data yang diduga outlier:
++----+------+-------------+----------------+---------------+----------------+---------------+----------------+
+|    |   id | class       |   petal_length |   petal_width |   sepal_length |   sepal_width |   avg_distance |
++====+======+=============+================+===============+================+===============+================+
+|  1 |    2 | Iris-setosa |             50 |            20 |           40.9 |            30 |        63.2578 |
++----+------+-------------+----------------+---------------+----------------+---------------+----------------+
+</pre></div>
 </div>
-</section>
-<section id="visualisasi-outlier">
-<h2>Visualisasi Outlier<a class="headerlink" href="#visualisasi-outlier" title="Link to this heading">#</a></h2>
-<p>VIsualisasi menggunakan library dari matplotlib dan seaborn</p>
-<p>ambil semua value dari tiap kolom dan tentukan variabel untuk batas atas dan batas bawah</p>
-<p>visualisasi dengan scatter plot untuk warna merah adalah outlier dan warna biru bukan</p>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Memilih baris yang termasuk outlier</span>
+<span class="n">outlier_df</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span>
 
-<span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;euclidean_distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_distances</span><span class="p">(</span><span class="n">df_merged</span><span class="p">[[</span><span class="s1">&#39;petal_length&#39;</span><span class="p">,</span> <span class="s1">&#39;petal_width&#39;</span><span class="p">,</span> <span class="s1">&#39;sepal_length&#39;</span><span class="p">,</span> <span class="s1">&#39;sepal_width&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">reference_point</span><span class="p">)</span>
+<span class="c1"># Visualisasi</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="n">batas_atas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;euclidean_distance&#39;</span><span class="p">],</span> <span class="mi">95</span><span class="p">)</span>
-<span class="n">batas_bawah</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;euclidean_distance&#39;</span><span class="p">],</span> <span class="mi">5</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_merged</span><span class="p">)),</span> <span class="n">y</span><span class="o">=</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;euclidean_distance&#39;</span><span class="p">],</span> <span class="n">hue</span><span class="o">=</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;euclidean_distance&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">batas_atas</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="p">{</span><span class="kc">False</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">})</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">batas_atas</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Upper Bound (Outlier Threshold)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">batas_bawah</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Lower Bound (Outlier Threshold)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_merged</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">outlier_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">outlier_df</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Outlier&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Scatter Plot Euclidean Distance (Menentukan Outlier)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Index Data&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Euclidean Distance&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Deteksi Outlier dengan KNN&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5e42d8857621bc32a95ac9802ac60e3908ff73ee6c2fe945bad1c1324c674b6c.png" src="_images/5e42d8857621bc32a95ac9802ac60e3908ff73ee6c2fe945bad1c1324c674b6c.png" />
+<img alt="_images/55b760b2caad3803e680e620509056c80d4d6a9dbc040f24ab2cef723a743004.png" src="_images/55b760b2caad3803e680e620509056c80d4d6a9dbc040f24ab2cef723a743004.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Menghitung Z-Score</span>
+<span class="n">mean_distance</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">std_distance</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;z_score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;avg_distance&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mean_distance</span><span class="p">)</span> <span class="o">/</span> <span class="n">std_distance</span>
+
+<span class="c1"># Menentukan outlier (Z-Score &gt; 3 atau &lt; -3)</span>
+<span class="n">outlier_df</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;z_score&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="c1"># Visualisasi Z-Score Plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_merged</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;z_score&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">outlier_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">outlier_df</span><span class="p">[</span><span class="s1">&#39;z_score&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Outlier&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Threshold +3&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Threshold -3&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Deteksi Outlier dengan Z-Score Plot&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/4715a4148797ba453b86c72b5870eab1877fae03d741e76aaa9f182661d90f18.png" src="_images/4715a4148797ba453b86c72b5870eab1877fae03d741e76aaa9f182661d90f18.png" />
 </div>
 </div>
 </section>
+</section>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -2585,8 +2515,17 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><strong>Proses dalam Memahami Data</strong></p>
+        <p class="prev-next-title"><strong>Data Understanding</strong></p>
       </div>
+    </a>
+    <a class="right-next"
+       href="LOF.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><strong>Local Outlier Factor (LOF)</strong></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -2605,21 +2544,26 @@ Langkah untuk mengumpulkan data dilakukan menggunakan <strong>Python</strong> se
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-outlier">1. Data Outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-data-outlier">1. Apa Itu Data Outlier?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penyebab-munculnya-data-outlier">2. Penyebab Munculnya Data Outlier</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pentingnya-mendeteksi-data-outlier">3. Pentingnya Mendeteksi Data Outlier</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jenis-data-outlier">4. Jenis Data Outlier</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-menggunakan-knn">Deteksi Outlier Menggunakan KNN</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#knn">KNN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-k-nearest-neighbors-knn">Apa itu K-Nearest Neighbors (KNN)?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-nilai-k"><strong>Menentukan Nilai “k”</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-jarak-antara-data-baru-dan-masing-masing-data-lainnya"><strong>Hitung jarak antara data baru dan masing-masing data lainnya</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ambil-tiga-data-dengan-jarak-terdekat"><strong>Ambil tiga data dengan jarak terdekat</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pengumpulan-data"><strong>Pengumpulan Data</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lokasi-data"><strong>Lokasi Data</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-pengumpulan"><strong>Metode Pengumpulan</strong></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-nilai-k">Menentukan Nilai “k”</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-database-postgresql-dari-aiven">Import Database PostgreSQL dari Aiven</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-database-mysql-dari-aiven">Import Database MySQL dari Aiven</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-jarak-dari-menggunakan-encludian-distance">Menghitung Jarak dari Menggunakan Encludian Distance</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#total-outlier">Total Outlier</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-outlier">Tabel Outlier</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-outlier">Visualisasi Outlier</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-database-postgresql-dari-aiven">Import Database PostgreSQL dari Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-database-mysql-dari-aiven">Import Database MySQL dari Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penggabungan-data">Penggabungan data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#program-untuk-mencari-knn">Program untuk mencari KNN</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
