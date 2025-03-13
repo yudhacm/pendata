@@ -371,18 +371,21 @@
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-lof"><strong>Apa Itu LOF?</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahapan-perhitungan-lof"><strong>Tahapan Perhitungan LOF</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tentukan-k-jumlah-tetangga-terdekat"><strong>1️⃣ Tentukan K (Jumlah Tetangga Terdekat)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-jarak-tetangga-terdekat-k-distance"><strong>2️⃣ Hitung Jarak Tetangga Terdekat (k-distance)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-reachability-distance"><strong>3️⃣ Hitung Reachability Distance</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-kepadatan-lokal-local-reachability-density-lrd"><strong>4️⃣ Hitung Kepadatan Lokal (Local Reachability Density - LRD)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-local-outlier-factor-lof"><strong>5️⃣ Hitung Local Outlier Factor (LOF)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tentukan-k-jumlah-tetangga-terdekat"><strong>1️. Tentukan K (Jumlah Tetangga Terdekat)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-jarak-tetangga-terdekat-k-distance"><strong>2️. Hitung Jarak Tetangga Terdekat (k-distance)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-reachability-distance"><strong>3️. Hitung Reachability Distance</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-kepadatan-lokal-local-reachability-density-lrd"><strong>4️. Hitung Kepadatan Lokal (Local Reachability Density - LRD)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-local-outlier-factor-lof"><strong>5️ Hitung Local Outlier Factor (LOF)</strong></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-perhitungan-manual-lof-10-baris-2-kolom">📊 <strong>Contoh Perhitungan Manual LOF (10 Baris, 2 Kolom)</strong></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-perhitungan-lof-untuk-titik-j"><strong>🔢 Langkah Perhitungan LOF untuk Titik J</strong></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan"><strong>Kesimpulan</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan"><strong>Kesimpulan</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-code"><strong>Penjelasan Code</strong></a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -407,14 +410,14 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
 <h2><strong>Tahapan Perhitungan LOF</strong><a class="headerlink" href="#tahapan-perhitungan-lof" title="Link to this heading">#</a></h2>
 <p>Proses deteksi outlier dengan <strong>Local Outlier Factor (LOF)</strong> terdiri dari beberapa langkah:</p>
 <section id="tentukan-k-jumlah-tetangga-terdekat">
-<h3><strong>1️⃣ Tentukan K (Jumlah Tetangga Terdekat)</strong><a class="headerlink" href="#tentukan-k-jumlah-tetangga-terdekat" title="Link to this heading">#</a></h3>
+<h3><strong>1️. Tentukan K (Jumlah Tetangga Terdekat)</strong><a class="headerlink" href="#tentukan-k-jumlah-tetangga-terdekat" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Pilih jumlah tetangga <strong>K</strong> (misalnya K = 2 atau 3).</p></li>
 <li><p>Setiap titik akan dibandingkan dengan <strong>K tetangga terdekatnya</strong>.</p></li>
 </ul>
 </section>
 <section id="hitung-jarak-tetangga-terdekat-k-distance">
-<h3><strong>2️⃣ Hitung Jarak Tetangga Terdekat (k-distance)</strong><a class="headerlink" href="#hitung-jarak-tetangga-terdekat-k-distance" title="Link to this heading">#</a></h3>
+<h3><strong>2️. Hitung Jarak Tetangga Terdekat (k-distance)</strong><a class="headerlink" href="#hitung-jarak-tetangga-terdekat-k-distance" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Gunakan <strong>jarak Euclidean</strong> untuk menghitung seberapa jauh suatu titik dari tetangga terdekatnya:</p>
 <div class="math notranslate nohighlight">
@@ -426,7 +429,7 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
 </ul>
 </section>
 <section id="hitung-reachability-distance">
-<h3><strong>3️⃣ Hitung Reachability Distance</strong><a class="headerlink" href="#hitung-reachability-distance" title="Link to this heading">#</a></h3>
+<h3><strong>3️. Hitung Reachability Distance</strong><a class="headerlink" href="#hitung-reachability-distance" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Jarak dapat dijangkau (reachability distance) antara <strong>p dan q</strong> dihitung sebagai:</p>
 <div class="math notranslate nohighlight">
@@ -438,7 +441,7 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
 </ul>
 </section>
 <section id="hitung-kepadatan-lokal-local-reachability-density-lrd">
-<h3><strong>4️⃣ Hitung Kepadatan Lokal (Local Reachability Density - LRD)</strong><a class="headerlink" href="#hitung-kepadatan-lokal-local-reachability-density-lrd" title="Link to this heading">#</a></h3>
+<h3><strong>4️. Hitung Kepadatan Lokal (Local Reachability Density - LRD)</strong><a class="headerlink" href="#hitung-kepadatan-lokal-local-reachability-density-lrd" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Kepadatan lokal dari suatu titik <strong>p</strong> dihitung dengan:</p>
 <div class="math notranslate nohighlight">
@@ -450,7 +453,7 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
 </ul>
 </section>
 <section id="hitung-local-outlier-factor-lof">
-<h3><strong>5️⃣ Hitung Local Outlier Factor (LOF)</strong><a class="headerlink" href="#hitung-local-outlier-factor-lof" title="Link to this heading">#</a></h3>
+<h3><strong>5️ Hitung Local Outlier Factor (LOF)</strong><a class="headerlink" href="#hitung-local-outlier-factor-lof" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Nilai <strong>LOF</strong> suatu titik <strong>p</strong> didefinisikan sebagai <strong>rasio rata-rata kepadatan tetangga terhadap kepadatan titik itu sendiri</strong>:</p>
 <div class="math notranslate nohighlight">
@@ -520,7 +523,7 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
 <hr class="docutils" />
 <section id="langkah-perhitungan-lof-untuk-titik-j">
 <h3><strong>🔢 Langkah Perhitungan LOF untuk Titik J</strong><a class="headerlink" href="#langkah-perhitungan-lof-untuk-titik-j" title="Link to this heading">#</a></h3>
-<p>1️⃣ <strong>Tentukan K = 2 Tetangga Terdekat</strong></p>
+<p>1️. <strong>Tentukan K = 2 Tetangga Terdekat</strong></p>
 <ul>
 <li><p>Tetangga terdekat <strong>J</strong> adalah <strong>I (7,4)</strong> dan <strong>H (5,3)</strong></p></li>
 <li><p>Hitung <strong>k-distance(J)</strong> → <strong>Jarak Euclidean</strong> dari <strong>J ke I &amp; H</strong></p></li>
@@ -531,7 +534,7 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
 \[ d(J, H) = \sqrt{(100-5)^2 + (100-3)^2} = 134.35 \]</div>
 </li>
 </ul>
-<p>2️⃣ <strong>Hitung Reachability Distance</strong></p>
+<p>2️. <strong>Hitung Reachability Distance</strong></p>
 <ul>
 <li><div class="math notranslate nohighlight">
 \[ \text{reach-dist}(J, I) = \max(k\text{-distance}(I), d(J, I)) = 131.82 \]</div>
@@ -540,13 +543,13 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
 \[ \text{reach-dist}(J, H) = \max(k\text{-distance}(H), d(J, H)) = 134.35 \]</div>
 </li>
 </ul>
-<p>3️⃣ <strong>Hitung Local Reachability Density (LRD)</strong></p>
+<p>3️. <strong>Hitung Local Reachability Density (LRD)</strong></p>
 <ul>
 <li><div class="math notranslate nohighlight">
 \[ LRD_J = \frac{2}{131.82 + 134.35} = 0.00752 \]</div>
 </li>
 </ul>
-<p>4️⃣ <strong>Hitung Local Outlier Factor (LOF)</strong></p>
+<p>4️. <strong>Hitung Local Outlier Factor (LOF)</strong></p>
 <ul>
 <li><div class="math notranslate nohighlight">
 \[ LOF_J = \frac{(LRD_I / LRD_J) + (LRD_H / LRD_J)}{2} \]</div>
@@ -563,6 +566,108 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
 <li><p>Artinya, titik ini <strong>berada jauh dari kepadatan lokal</strong> dan dapat dianggap sebagai <strong>outlier</strong>.</p></li>
 </ul>
 <hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
+
+<span class="c1"># Data dengan ID</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">]</span>
+
+<span class="c1"># Data points (X, Y)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="p">])</span>
+
+<span class="c1"># Apply Local Outlier Factor (LOF)</span>
+<span class="n">lof</span> <span class="o">=</span> <span class="n">LocalOutlierFactor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">outlier_scores</span> <span class="o">=</span> <span class="n">lof</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Identify outliers (-1 indicates outliers)</span>
+<span class="n">outliers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">outlier_scores</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Mendapatkan LOF scores dan Local Reachability Density (LRD)</span>
+<span class="n">lof_scores</span> <span class="o">=</span> <span class="n">lof</span><span class="o">.</span><span class="n">negative_outlier_factor_</span>  <span class="c1"># Semakin kecil, semakin outlier</span>
+<span class="n">lrd_scores</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lof_scores</span><span class="p">)</span>  <span class="c1"># LRD adalah kebalikan dari LOF</span>
+
+<span class="c1"># Menandai outlier (Yes jika outlier, No jika bukan)</span>
+<span class="n">outlier_flags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Yes&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">outliers</span> <span class="k">else</span> <span class="s2">&quot;No&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))]</span>
+
+<span class="c1"># Membuat DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Outlier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outlier_flags</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;LOF Score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lof_scores</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;LRD Score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lrd_scores</span>
+
+<span class="c1"># Menampilkan DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Plot data</span>
+<span class="n">outlier_points</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">outliers</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Data Points&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">outlier_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">outlier_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Outliers&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Labels and legend</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Outlier Detection using LOF&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  ID    X    Y Outlier  LOF Score  LRD Score
+0  A    2    3      No  -1.000000   1.000000
+1  B    3    4      No  -0.902369   1.108194
+2  C    4    2      No  -1.085786   0.920991
+3  D    5    5      No  -1.172589   0.852814
+4  E    3    3      No  -1.000000   1.000000
+5  F    4    4      No  -1.060660   0.942809
+6  G    6    2      No  -1.207107   0.828427
+7  H    5    3      No  -0.971405   1.029437
+8  I    7    4      No  -1.309858   0.763441
+9  J  100  100     Yes -69.213663   0.014448
+</pre></div>
+</div>
+<img alt="_images/47bbf28adc01a9c712b67d9827f66011976108ba26ea472151252e6b787efc75.png" src="_images/47bbf28adc01a9c712b67d9827f66011976108ba26ea472151252e6b787efc75.png" />
+</div>
+</div>
+<section id="penjelasan-code">
+<h3><strong>Penjelasan Code</strong><a class="headerlink" href="#penjelasan-code" title="Link to this heading">#</a></h3>
+<p>Membutuhkan library berikut:</p>
+<ul class="simple">
+<li><p>numpy digunakan untuk operasi numerik dan manipulasi array.</p></li>
+<li><p>pandas digunakan untuk menyimpan dan memproses data dalam bentuk tabel (DataFrame).</p></li>
+<li><p>matplotlib.pyplot digunakan untuk visualisasi data dalam bentuk scatter plot.</p></li>
+<li><p>LocalOutlierFactor dari sklearn.neighbors adalah metode yang digunakan untuk mendeteksi outlier dalam dataset.</p></li>
+</ul>
+<hr class="docutils" />
+<p>Tampung data pada variabel ids atau jika anda menggunakan database, anda bisa menggunakan aiven dan dbeaver lalu masukkan informasi database dan connect.</p>
+<hr class="docutils" />
+<p>Buat variabel untuk menentukan nilai k seperti di kode yaitu 2
+Melakukan training pada dataset dan mengembalikan prediksi (-1 untuk outlier, 1 untuk inlier/non-outlier).</p>
+<hr class="docutils" />
+<p><code class="docutils literal notranslate"><span class="pre">np.where(outlier_scores</span> <span class="pre">==</span> <span class="pre">-1)[0]</span></code> akan mengembalikan indeks dari data yang diklasifikasikan sebagai outlier oleh LOF.</p>
+<p>Nilai yang lebih kecil menunjukkan bahwa titik lebih jauh dari tetangganya dan lebih mungkin menjadi outlier.</p>
+<hr class="docutils" />
+<p>Local Reachability Density (LRD) adalah kebalikan dari LOF score.</p>
+<p>LRD menunjukkan kepadatan relatif dari sebuah titik dibandingkan dengan titik di sekitarnya.</p>
+<hr class="docutils" />
+<p>Yes untuk outlier dan no bukan</p>
+<hr class="docutils" />
+<p>Kemudian tampilkan dataframe</p>
+<p>–</p>
+<p><code class="docutils literal notranslate"><span class="pre">data[:,</span> <span class="pre">0]</span> <span class="pre">dan</span> <span class="pre">data[:,</span> <span class="pre">1]</span></code> digunakan untuk mendapatkan semua nilai X dan Y untuk scatter plot.</p>
+<p>Titik data normal diberi warna biru.</p>
+<p>Outlier diberi warna merah dan berbentuk “X”.</p>
+<hr class="docutils" />
+</section>
 </section>
 </section>
 
@@ -624,18 +729,21 @@ Jika suatu titik memiliki <strong>kepadatan jauh lebih rendah</strong> dibanding
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-lof"><strong>Apa Itu LOF?</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahapan-perhitungan-lof"><strong>Tahapan Perhitungan LOF</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tentukan-k-jumlah-tetangga-terdekat"><strong>1️⃣ Tentukan K (Jumlah Tetangga Terdekat)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-jarak-tetangga-terdekat-k-distance"><strong>2️⃣ Hitung Jarak Tetangga Terdekat (k-distance)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-reachability-distance"><strong>3️⃣ Hitung Reachability Distance</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-kepadatan-lokal-local-reachability-density-lrd"><strong>4️⃣ Hitung Kepadatan Lokal (Local Reachability Density - LRD)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-local-outlier-factor-lof"><strong>5️⃣ Hitung Local Outlier Factor (LOF)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tentukan-k-jumlah-tetangga-terdekat"><strong>1️. Tentukan K (Jumlah Tetangga Terdekat)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-jarak-tetangga-terdekat-k-distance"><strong>2️. Hitung Jarak Tetangga Terdekat (k-distance)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-reachability-distance"><strong>3️. Hitung Reachability Distance</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-kepadatan-lokal-local-reachability-density-lrd"><strong>4️. Hitung Kepadatan Lokal (Local Reachability Density - LRD)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-local-outlier-factor-lof"><strong>5️ Hitung Local Outlier Factor (LOF)</strong></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-perhitungan-manual-lof-10-baris-2-kolom">📊 <strong>Contoh Perhitungan Manual LOF (10 Baris, 2 Kolom)</strong></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-perhitungan-lof-untuk-titik-j"><strong>🔢 Langkah Perhitungan LOF untuk Titik J</strong></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan"><strong>Kesimpulan</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan"><strong>Kesimpulan</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-code"><strong>Penjelasan Code</strong></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
