@@ -1,0 +1,1355 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>K-Means Clustering &#8212; Penambangan Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'K_Means_Clustering';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/yudha.png" class="logo__image only-light" alt="Penambangan Data - Home"/>
+    <img src="_static/yudha.png" class="logo__image only-dark pst-js-only" alt="Penambangan Data - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to Data Mining
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="Data_Understanding.html"><strong>Data Understanding</strong></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="Outlier_Detection.html">Outlier Detection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="LOF.html"><strong>Local Outlier Factor (LOF)</strong></a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="Data_Preparation.html"><strong>Data Preparation</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="UTS_Pendat.html">Data Understanding</a></li>
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FK_Means_Clustering.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/K_Means_Clustering.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>K-Means Clustering</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">K-Means Clustering</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instalasi-library">Instalasi Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-data">Persiapan Data</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-k-means-clustering-pada-dataset-iris">Implementasi K-Means Clustering pada Dataset Iris</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">K-Means Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-langkah-implementasi">Langkah-langkah Implementasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-visualisasi">Hasil Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-tambahan">Informasi tambahan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-akhir-k-means-clustering">Hasil Akhir K-Means Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#centroid-akhir">Centroid Akhir:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-assignment-untuk-setiap-titik-data">Cluster Assignment untuk Setiap Titik Data:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#centroid-akhir-per-fitur-setiap-cluster">Centroid Akhir per Fitur (Setiap Cluster):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-singkat">Interpretasi Singkat:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-inertia-dalam-k-means-clustering">Memahami Inertia dalam K-Means Clustering</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-inertia">Apa Itu Inertia?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rumus-inertia">Rumus Inertia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#peran-inertia-dalam-menentukan-jumlah-klaster-optimal-k">Peran Inertia dalam Menentukan Jumlah Klaster Optimal (K)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-nilai-inertia">Interpretasi Nilai Inertia</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-kode-mencari-inertia-untuk-k-means-clustering">Penjelasan Kode: Mencari Inertia untuk K-Means Clustering</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-elbow-menentukan-jumlah-cluster-optimal-dalam-k-means">Metode Elbow: Menentukan Jumlah Cluster Optimal dalam K-Means</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-kerja-metode-elbow">Cara Kerja Metode Elbow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-grafik-elbow">Interpretasi Grafik Elbow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-elbow-menentukan-jumlah-cluster-optimal-k-dalam-k-means-fokus-pada-k-3">Metode Elbow: Menentukan Jumlah Cluster Optimal (K) dalam K-Means (Fokus pada K=3)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-grafik-elbow-dengan-siku-di-k-3">Interpretasi Grafik Elbow dengan Siku di K=3</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-silhouette-score-dalam-clustering">Memahami Silhouette Score dalam Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rumus-silhouette-score">Rumus Silhouette Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-nilai-silhouette-score">Interpretasi Nilai Silhouette Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-sementara">Kesimpulan Sementara</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penggunaan-silhouette-score-dalam-praktik">Penggunaan Silhouette Score dalam Praktik 🛠️</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kelebihan-silhouette-score">Kelebihan Silhouette Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kekurangan-silhouette-score">Kekurangan Silhouette Score</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="k-means-clustering">
+<h1>K-Means Clustering<a class="headerlink" href="#k-means-clustering" title="Link to this heading">#</a></h1>
+<section id="instalasi-library">
+<h2>Instalasi Library<a class="headerlink" href="#instalasi-library" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>matplotlib<span class="w"> </span>seaborn
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: matplotlib in /home/codespace/.local/lib/python3.12/site-packages (3.9.3)
+Requirement already satisfied: seaborn in /home/codespace/.local/lib/python3.12/site-packages (0.13.2)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (1.3.1)
+Requirement already satisfied: cycler&gt;=0.10 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (4.55.3)
+Requirement already satisfied: kiwisolver&gt;=1.3.1 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (1.4.7)
+Requirement already satisfied: numpy&gt;=1.23 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (2.2.0)
+Requirement already satisfied: packaging&gt;=20.0 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (24.2)
+Requirement already satisfied: pillow&gt;=8 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (11.0.0)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (3.2.0)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib) (2.9.0.post0)
+Requirement already satisfied: pandas&gt;=1.2 in /home/codespace/.local/lib/python3.12/site-packages (from seaborn) (2.2.3)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pytz&gt;=2020.1 in /home/codespace/.local/lib/python3.12/site-packages (from pandas&gt;=1.2-&gt;seaborn) (2024.2)
+Requirement already satisfied: tzdata&gt;=2022.7 in /home/codespace/.local/lib/python3.12/site-packages (from pandas&gt;=1.2-&gt;seaborn) (2024.2)
+Requirement already satisfied: six&gt;=1.5 in /home/codespace/.local/lib/python3.12/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.17.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">24.3.1</span> -&gt; <span class=" -Color -Color-Green">25.1.1</span>
+<span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">python3 -m pip install --upgrade pip</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="persiapan-data">
+<h2>Persiapan Data<a class="headerlink" href="#persiapan-data" title="Link to this heading">#</a></h2>
+<p>Masukkan informasi database dari aiven seperti code dibawah ini</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">files</span>
+
+<span class="c1"># Upload file</span>
+<span class="n">uploaded</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">upload</span><span class="p">()</span>
+
+<span class="c1"># Membaca file CSV yang diupload</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">uploaded</span><span class="p">))</span>
+<span class="n">data_iris</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+<span class="c1"># Membersihkan nama kolom</span>
+<span class="n">data_iris</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="s1">&#39;Sepal Length&#39;</span><span class="p">,</span> <span class="s1">&#39;Sepal Width&#39;</span><span class="p">,</span> <span class="s1">&#39;Petal Length&#39;</span><span class="p">,</span> <span class="s1">&#39;Petal Width&#39;</span><span class="p">,</span> <span class="s1">&#39;Species&#39;</span><span class="p">]</span>
+
+<span class="c1"># Menampilkan data</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data Iris:&quot;</span><span class="p">)</span>
+<span class="n">data_iris</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">files</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1"># Upload file</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">uploaded</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">upload</span><span class="p">()</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;google&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="implementasi-k-means-clustering-pada-dataset-iris">
+<h1>Implementasi K-Means Clustering pada Dataset Iris<a class="headerlink" href="#implementasi-k-means-clustering-pada-dataset-iris" title="Link to this heading">#</a></h1>
+<section id="id1">
+<h2>K-Means Clustering<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>K-Means Clustering adalah algoritma <strong>unsupervised learning</strong> yang digunakan untuk <strong>mengelompokkan data</strong> ke dalam beberapa klaster berdasarkan kemiripan fitur.<br />
+Pada contoh ini, kita akan menggunakan dataset <strong>Iris</strong> dan menerapkan <strong>K-Means Clustering</strong> untuk mengelompokkan data menjadi <strong>3 klaster</strong> berdasarkan fitur-fitur dalam dataset.</p>
+</section>
+<hr class="docutils" />
+<section id="langkah-langkah-implementasi">
+<h2>Langkah-langkah Implementasi<a class="headerlink" href="#langkah-langkah-implementasi" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Import pustaka yang diperlukan</strong>:</p></li>
+</ol>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> untuk manipulasi numerik</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> untuk visualisasi</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sklearn.cluster.KMeans</span></code> untuk implementasi K-Means</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sklearn.datasets.load_iris</span></code> untuk memuat dataset Iris</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sklearn.decomposition.PCA</span></code> untuk reduksi dimensi</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p><strong>Load dataset Iris</strong>:</p>
+<ul class="simple">
+<li><p>Dataset Iris terdiri dari <strong>empat fitur</strong> untuk masing-masing sampel bunga.</p></li>
+<li><p>Fitur yang digunakan: <em>sepal length, sepal width, petal length, petal width</em>.</p></li>
+</ul>
+</li>
+<li><p><strong>Menentukan jumlah klaster (K)</strong>:</p>
+<ul class="simple">
+<li><p>Dalam contoh ini, kita menetapkan <strong>K = 3</strong>, sesuai dengan jumlah spesies dalam dataset Iris.</p></li>
+</ul>
+</li>
+<li><p><strong>Inisialisasi dan pelatihan model K-Means</strong>:</p>
+<ul class="simple">
+<li><p>Parameter yang digunakan dalam K-Means:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_clusters=3</span></code> (jumlah klaster)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">init='k-means++'</span></code> (strategi pemilihan centroid awal)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_iter=500</span></code> (batas jumlah iterasi)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tol=0.000001</span></code> (toleransi konvergensi)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">algorithm='lloyd'</span></code> (algoritma klasik untuk K-Means)</p></li>
+</ul>
+</li>
+<li><p>Model dilatih menggunakan <code class="docutils literal notranslate"><span class="pre">.fit(X)</span></code>, di mana <code class="docutils literal notranslate"><span class="pre">X</span></code> adalah fitur dari dataset Iris.</p></li>
+</ul>
+</li>
+<li><p><strong>Mengambil hasil clustering</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">kmeans.cluster_centers_</span></code></strong>: Posisi centroid setelah konvergensi.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">kmeans.labels_</span></code></strong>: Label klaster untuk setiap titik data dalam dataset.</p></li>
+</ul>
+</li>
+<li><p><strong>Reduksi dimensi menggunakan PCA</strong>:</p>
+<ul class="simple">
+<li><p>PCA digunakan untuk <strong>mengurangi jumlah fitur dari 4 menjadi 2</strong>, sehingga data bisa divisualisasikan dengan lebih mudah.</p></li>
+<li><p>Transformasi dilakukan menggunakan <code class="docutils literal notranslate"><span class="pre">PCA(n_components=2)</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Visualisasi hasil clustering</strong>:</p>
+<ul class="simple">
+<li><p>Data yang telah direduksi dimensinya diplot berdasarkan label klasternya.</p></li>
+<li><p>Centroid ditampilkan dengan simbol <strong>X</strong> berwarna hitam agar mudah dikenali.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="hasil-visualisasi">
+<h2>Hasil Visualisasi<a class="headerlink" href="#hasil-visualisasi" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Grafik menunjukkan pembagian klaster berdasarkan hasil K-Means Clustering</strong>.</p></li>
+<li><p><strong>Centroid ditandai dengan titik hitam</strong>, yang menunjukkan titik tengah dari masing-masing klaster.</p></li>
+<li><p>Dengan PCA, kita bisa melihat bagaimana data dikelompokkan dalam <strong>ruang dua dimensi</strong> berdasarkan komponen utama.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="informasi-tambahan">
+<h2>Informasi tambahan<a class="headerlink" href="#informasi-tambahan" title="Link to this heading">#</a></h2>
+<p>Selain visualisasi, model juga mencetak:</p>
+<ul class="simple">
+<li><p><strong>Koordinat centroid akhir</strong> setelah iterasi K-Means selesai.</p></li>
+<li><p><strong>Label klaster untuk masing-masing sampel</strong> dalam dataset.</p></li>
+<li><p><strong>Rata-rata setiap fitur per klaster</strong> setelah proses clustering selesai.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Selanjutnya:</strong> Kita bisa mengevaluasi hasil clustering dengan <strong>Metode Elbow</strong> atau <strong>Silhouette Score</strong> untuk menentukan jumlah klaster optimal!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="c1"># Load dataset Iris</span>
+<span class="n">data_iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_iris</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># Fitur dataset</span>
+
+<span class="c1"># Tentukan jumlah cluster (K)</span>
+<span class="n">K</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># 1. Inisialisasi K-Means dengan jumlah cluster K dan parameter sesuai dokumentasi</span>
+<span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span>
+    <span class="n">n_clusters</span><span class="o">=</span><span class="n">K</span><span class="p">,</span>
+    <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span>
+    <span class="n">n_init</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">tol</span><span class="o">=</span><span class="mf">0.000001</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">copy_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;lloyd&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># 2. Latih model K-Means pada data</span>
+<span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># 3. Ambil hasil clustering</span>
+<span class="n">centroids</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span>  <span class="c1"># Centroid akhir</span>
+<span class="n">clusters</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span>  <span class="c1"># Label cluster untuk tiap titik data</span>
+
+<span class="c1"># 4. Reduksi dimensi menggunakan PCA untuk visualisasi (menggunakan 2 komponen utama)</span>
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+
+
+<span class="c1"># Outputkan centroid dan label cluster untuk setiap titik data</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Centroid akhir:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">centroids</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cluster assignment untuk setiap titik data:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Centroid akhir per fitur (setiap cluster):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data_iris</span><span class="o">.</span><span class="n">feature_names</span><span class="p">,</span> <span class="n">centroids</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Centroid akhir:
+[[6.85384615 3.07692308 5.71538462 2.05384615]
+ [5.006      3.428      1.462      0.246     ]
+ [5.88360656 2.74098361 4.38852459 1.43442623]]
+
+Cluster assignment untuk setiap titik data:
+[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ 1 1 1 1 1 1 1 1 1 1 1 1 1 0 2 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+ 2 2 2 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0 2 0 0 0 0 2 0 0 0 0
+ 0 0 2 2 0 0 0 0 2 0 2 0 2 0 0 2 2 0 0 0 0 0 2 0 0 0 0 2 0 0 0 2 0 0 0 2 0
+ 0 2]
+
+Centroid akhir per fitur (setiap cluster):
+Cluster 1:
+  sepal length (cm): 6.8538
+  sepal width (cm): 3.0769
+  petal length (cm): 5.7154
+  petal width (cm): 2.0538
+
+Cluster 2:
+  sepal length (cm): 5.0060
+  sepal width (cm): 3.4280
+  petal length (cm): 1.4620
+  petal width (cm): 0.2460
+
+Cluster 3:
+  sepal length (cm): 5.8836
+  sepal width (cm): 2.7410
+  petal length (cm): 4.3885
+  petal width (cm): 1.4344
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="hasil-akhir-k-means-clustering">
+<h2>Hasil Akhir K-Means Clustering<a class="headerlink" href="#hasil-akhir-k-means-clustering" title="Link to this heading">#</a></h2>
+<p>Berikut adalah hasil akhir dari algoritma K-Means Clustering yang telah dijalankan:</p>
+<section id="centroid-akhir">
+<h3>Centroid Akhir:<a class="headerlink" href="#centroid-akhir" title="Link to this heading">#</a></h3>
+<p>Array di atas menunjukkan koordinat dari pusat (centroid) dari tiga cluster yang telah ditemukan. Setiap baris merepresentasikan satu centroid, dan setiap kolom merepresentasikan nilai rata-rata fitur untuk cluster tersebut.</p>
+<ul class="simple">
+<li><p><strong>Centroid 1:</strong> <code class="docutils literal notranslate"><span class="pre">[6.85384615</span> <span class="pre">3.07692308</span> <span class="pre">5.71538462</span> <span class="pre">2.05384615]</span></code></p></li>
+<li><p><strong>Centroid 2:</strong> <code class="docutils literal notranslate"><span class="pre">[5.006</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">3.428</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">1.462</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0.246</span>&#160;&#160;&#160;&#160; <span class="pre">]</span></code></p></li>
+<li><p><strong>Centroid 3:</strong> <code class="docutils literal notranslate"><span class="pre">[5.88360656</span> <span class="pre">2.74098361</span> <span class="pre">4.38852459</span> <span class="pre">1.43442623]</span></code></p></li>
+</ul>
+</section>
+<section id="cluster-assignment-untuk-setiap-titik-data">
+<h3>Cluster Assignment untuk Setiap Titik Data:<a class="headerlink" href="#cluster-assignment-untuk-setiap-titik-data" title="Link to this heading">#</a></h3>
+<p>[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 0 2 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+2 2 2 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0 2 0 0 0 0 2 0 0 0 0
+0 0 2 2 0 0 0 0 2 0 2 0 2 0 0 2 2 0 0 0 0 0 2 0 0 0 0 2 0 0 0 2 0 0 0 2 0
+0 2]</p>
+<p>Array ini menunjukkan cluster mana yang telah ditetapkan ke setiap titik data dalam dataset. Indeks array sesuai dengan indeks titik data, dan nilai pada indeks tersebut menunjukkan nomor cluster (dimulai dari 0).</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: Titik data masuk ke dalam Cluster 2.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: Titik data masuk ke dalam Cluster 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Titik data masuk ke dalam Cluster 3.</p></li>
+</ul>
+</section>
+<section id="centroid-akhir-per-fitur-setiap-cluster">
+<h3>Centroid Akhir per Fitur (Setiap Cluster):<a class="headerlink" href="#centroid-akhir-per-fitur-setiap-cluster" title="Link to this heading">#</a></h3>
+<p>Berikut adalah nilai centroid akhir untuk setiap fitur dalam setiap cluster:</p>
+<p><strong>Cluster 1:</strong></p>
+<ul class="simple">
+<li><p>Sepal Length (cm): 6.8538</p></li>
+<li><p>Sepal Width (cm): 3.0769</p></li>
+<li><p>Petal Length (cm): 5.7154</p></li>
+<li><p>Petal Width (cm): 2.0538</p></li>
+</ul>
+<p><strong>Cluster 2:</strong></p>
+<ul class="simple">
+<li><p>Sepal Length (cm): 5.0060</p></li>
+<li><p>Sepal Width (cm): 3.4280</p></li>
+<li><p>Petal Length (cm): 1.4620</p></li>
+<li><p>Petal Width (cm): 0.2460</p></li>
+</ul>
+<p><strong>Cluster 3:</strong></p>
+<ul class="simple">
+<li><p>Sepal Length (cm): 5.8836</p></li>
+<li><p>Sepal Width (cm): 2.7410</p></li>
+<li><p>Petal Length (cm): 4.3885</p></li>
+<li><p>Petal Width (cm): 1.4344</p></li>
+</ul>
+</section>
+<section id="interpretasi-singkat">
+<h3>Interpretasi Singkat:<a class="headerlink" href="#interpretasi-singkat" title="Link to this heading">#</a></h3>
+<p>Berdasarkan nilai centroid, kita dapat melihat karakteristik rata-rata dari setiap cluster. Misalnya, Cluster 2 memiliki nilai petal length dan width yang paling rendah, sementara Cluster 1 memiliki nilai petal length dan width yang paling tinggi. Cluster 3 memiliki nilai-nilai fitur yang berada di antara keduanya. Jika dataset ini adalah dataset Iris, cluster-cluster ini kemungkinan besar merepresentasikan spesies yang berbeda.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 5. Visualisasi hasil clustering (menggunakan 2 fitur dari hasil PCA)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Plot data berdasarkan cluster</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+    <span class="n">cluster_data</span> <span class="o">=</span> <span class="n">X_pca</span><span class="p">[</span><span class="n">clusters</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cluster_data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Cluster </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot centroid</span>
+<span class="n">centroids_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">centroids</span><span class="p">)</span>  <span class="c1"># Transform centroid ke dalam ruang PCA</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">centroids_pca</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">centroids_pca</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Centroids&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;K-Means Clustering (Iris Dataset) - PCA Visualization&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Principal Component 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Principal Component 2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/269783dbe9c86b1c0ac6695df069ad1c7dff3e97a23130e3f6137b99347a4ecd.png" src="_images/269783dbe9c86b1c0ac6695df069ad1c7dff3e97a23130e3f6137b99347a4ecd.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="memahami-inertia-dalam-k-means-clustering">
+<h1>Memahami Inertia dalam K-Means Clustering<a class="headerlink" href="#memahami-inertia-dalam-k-means-clustering" title="Link to this heading">#</a></h1>
+<section id="apa-itu-inertia">
+<h2>Apa Itu Inertia?<a class="headerlink" href="#apa-itu-inertia" title="Link to this heading">#</a></h2>
+<p><strong>Inertia</strong>, juga dikenal sebagai <strong>Sum of Squared Errors (SSE)</strong>, adalah metrik penting dalam K-Means Clustering yang mengukur <strong>seberapa baik</strong> data telah dikelompokkan. Semakin kecil nilai <strong>Inertia</strong>, semakin padat dan terdefinisi klaster yang terbentuk, karena titik-titik data terletak dekat dengan pusat (centroid) klaster mereka.</p>
+</section>
+<section id="rumus-inertia">
+<h2>Rumus Inertia<a class="headerlink" href="#rumus-inertia" title="Link to this heading">#</a></h2>
+<p>Inertia dihitung sebagai jumlah kuadrat jarak Euclidean antara setiap titik data dan pusat (centroid) klaster tempat titik data tersebut berada:</p>
+<div class="math notranslate nohighlight">
+\[
+J = \sum_{i=1}^{K} \sum_{j=1}^{n_i} \| x_j^{(i)} - \mu_i \|^2
+\]</div>
+<p>Dengan:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(( K )\)</span> = jumlah klaster</p></li>
+<li><p><span class="math notranslate nohighlight">\(( n_i )\)</span> = jumlah titik data dalam klaster ke-( i )</p></li>
+<li><p><span class="math notranslate nohighlight">\(( x_j^{(i)} )\)</span> = titik data ke-( j ) dalam klaster ke-( i )</p></li>
+<li><p><span class="math notranslate nohighlight">\(( \mu_i )\)</span> = pusat (centroid) dari klaster ke-( i )</p></li>
+<li><p><span class="math notranslate nohighlight">\(( \| x_j^{(i)} - \mu_i \|^2 )\)</span> = kuadrat jarak Euclidean antara titik data <span class="math notranslate nohighlight">\(( x_j^{(i)} )\)</span> dan centroid <span class="math notranslate nohighlight">\(( \mu_i )\)</span></p></li>
+</ul>
+</section>
+<section id="peran-inertia-dalam-menentukan-jumlah-klaster-optimal-k">
+<h2>Peran Inertia dalam Menentukan Jumlah Klaster Optimal (K)<a class="headerlink" href="#peran-inertia-dalam-menentukan-jumlah-klaster-optimal-k" title="Link to this heading">#</a></h2>
+<p>Salah satu metode populer untuk menentukan jumlah klaster ( K ) yang optimal adalah <strong>Metode Elbow</strong>, yang memanfaatkan <strong>Inertia</strong>:</p>
+<ol class="arabic simple">
+<li><p>Hitung nilai <strong>Inertia</strong> untuk berbagai kemungkinan jumlah klaster ( K ) (misalnya, dari 1 hingga 10).</p></li>
+<li><p>Visualisasikan nilai <strong>Inertia</strong> terhadap jumlah klaster ( K ) dalam sebuah plot garis.</p></li>
+<li><p>Identifikasi titik pada plot di mana penurunan <strong>Inertia</strong> mulai melambat secara signifikan, membentuk визуальный “siku” (elbow). Jumlah klaster pada titik siku ini sering dianggap sebagai jumlah klaster yang optimal.</p></li>
+</ol>
+</section>
+<section id="interpretasi-nilai-inertia">
+<h2>Interpretasi Nilai Inertia<a class="headerlink" href="#interpretasi-nilai-inertia" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Inertia rendah:</strong> Mengindikasikan klaster yang lebih baik, di mana titik-titik data cenderung berkumpul dekat dengan centroid masing-masing.</p></li>
+<li><p><strong>Inertia tinggi:</strong> Menunjukkan klaster yang kurang optimal, dengan titik-titik data yang lebih tersebar jauh dari pusat klaster.</p></li>
+<li><p><strong>Penurunan Inertia:</strong> Umumnya terjadi dengan penambahan jumlah klaster. Namun, penambahan klaster yang berlebihan dapat menyebabkan <strong>overfitting</strong>, di mana model terlalu cocok dengan data latih dan gagal menggeneralisasi dengan baik pada data baru.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Langkah Selanjutnya:</strong> Mari kita eksplorasi implementasi <strong>Metode Elbow</strong> untuk menemukan jumlah klaster yang paling sesuai berdasarkan nilai Inertia!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Gunakan variabel data_iris yang sudah dimiliki</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_iris</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># Menggunakan semua fitur iris</span>
+
+<span class="c1"># Tentukan range jumlah cluster (K) yang diuji, mulai dari 2 sampai 10</span>
+<span class="n">k_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">inertias</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Hitung Inertia untuk tiap K</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">k_range</span><span class="p">:</span>
+    <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span>
+        <span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span>
+        <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span>
+        <span class="n">n_init</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="mf">0.000001</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">copy_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;lloyd&#39;</span>
+    <span class="p">)</span>
+    <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">inertias</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+<span class="c1"># Tampilkan nilai Inertia per K</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nilai Inertia per K:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inertia</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">k_range</span><span class="p">,</span> <span class="n">inertias</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;K = </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: Inertia = </span><span class="si">{</span><span class="n">inertia</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nilai Inertia per K:
+K = 2: Inertia = 152.34795176035797
+K = 3: Inertia = 78.85566582597727
+K = 4: Inertia = 57.350880212954756
+</pre></div>
+</div>
+</div>
+</div>
+<section id="penjelasan-kode-mencari-inertia-untuk-k-means-clustering">
+<h3>Penjelasan Kode: Mencari Inertia untuk K-Means Clustering<a class="headerlink" href="#penjelasan-kode-mencari-inertia-untuk-k-means-clustering" title="Link to this heading">#</a></h3>
+<p>Kode ini bertujuan untuk menghitung dan menampilkan nilai <strong>Inertia</strong> untuk berbagai jumlah klaster (K) dalam algoritma K-Means Clustering, yang diterapkan pada dataset Iris. Inertia digunakan sebagai metrik untuk mengevaluasi kualitas pengelompokan data.</p>
+<p><strong>Langkah-langkah:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Import Library:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> untuk operasi numerik.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> untuk visualisasi data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sklearn.cluster.KMeans</span></code> untuk algoritma K-Means.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code> untuk manipulasi data (walaupun tidak digunakan secara eksplisit dalam kode ini).</p></li>
+</ul>
+</li>
+<li><p><strong>Persiapan Data:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">data_iris.data</span></code>: Mengambil fitur-fitur dari dataset Iris dan menyimpannya dalam variabel <code class="docutils literal notranslate"><span class="pre">X</span></code>. Diasumsikan bahwa variabel <code class="docutils literal notranslate"><span class="pre">data_iris</span></code> sudah didefinisikan sebelumnya dan berisi data Iris.</p></li>
+</ul>
+</li>
+<li><p><strong>Menentukan Range K:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">k_range</span> <span class="pre">=</span> <span class="pre">range(2,</span> <span class="pre">5)</span></code>: Menentukan rentang jumlah klaster (K) yang akan diuji, yaitu dari 2 hingga 4.</p></li>
+</ul>
+</li>
+<li><p><strong>Menghitung Inertia:</strong></p>
+<ul class="simple">
+<li><p>Looping melalui setiap nilai K dalam <code class="docutils literal notranslate"><span class="pre">k_range</span></code>:</p>
+<ul>
+<li><p>Membuat objek <code class="docutils literal notranslate"><span class="pre">KMeans</span></code> dengan parameter yang telah ditentukan, termasuk jumlah klaster (<code class="docutils literal notranslate"><span class="pre">n_clusters=k</span></code>).</p></li>
+<li><p>Melatih model K-Means menggunakan data <code class="docutils literal notranslate"><span class="pre">X</span></code> dengan memanggil <code class="docutils literal notranslate"><span class="pre">kmeans.fit(X)</span></code>.</p></li>
+<li><p>Menyimpan nilai Inertia yang diperoleh dari model (<code class="docutils literal notranslate"><span class="pre">kmeans.inertia_</span></code>) ke dalam list <code class="docutils literal notranslate"><span class="pre">inertias</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Menampilkan Hasil:</strong></p>
+<ul class="simple">
+<li><p>Mencetak judul “Nilai Inertia per K:”.</p></li>
+<li><p>Looping melalui setiap nilai K dan Inertia yang tersimpan:</p>
+<ul>
+<li><p>Mencetak nilai K dan Inertia yang bersesuaian dalam format yang mudah dibaca.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>Tujuan:</strong></p>
+<p>Kode ini bertujuan untuk memberikan informasi tentang bagaimana Inertia berubah seiring dengan perubahan jumlah klaster (K). Informasi ini dapat digunakan dalam <strong>Metode Elbow</strong> untuk menentukan jumlah klaster yang optimal. Pada Metode Elbow, kita mencari titik “siku” pada plot Inertia vs. K, di mana penurunan Inertia mulai melambat secara signifikan. Titik siku ini mengindikasikan jumlah klaster yang optimal.</p>
+<p><strong>Catatan:</strong></p>
+</section>
+</section>
+<section id="metode-elbow-menentukan-jumlah-cluster-optimal-dalam-k-means">
+<h2>Metode Elbow: Menentukan Jumlah Cluster Optimal dalam K-Means<a class="headerlink" href="#metode-elbow-menentukan-jumlah-cluster-optimal-dalam-k-means" title="Link to this heading">#</a></h2>
+<p>Metode <strong>Elbow</strong> adalah teknik visual yang populer digunakan untuk menentukan jumlah cluster (( K )) yang optimal dalam algoritma K-Means. Ide dasarnya adalah untuk menjalankan K-Means dengan berbagai nilai ( K ) dan mengamati bagaimana metrik evaluasi (biasanya <strong>Inertia</strong>) berubah.</p>
+<section id="cara-kerja-metode-elbow">
+<h3>Cara Kerja Metode Elbow<a class="headerlink" href="#cara-kerja-metode-elbow" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Latih Model K-Means dengan Berbagai Nilai ( K ):</strong> Kita melatih beberapa model K-Means, masing-masing dengan jumlah cluster yang berbeda dalam suatu rentang tertentu (misalnya, ( K ) dari 2 hingga 14).</p></li>
+<li><p><strong>Hitung Inertia untuk Setiap Model:</strong> Untuk setiap model yang dilatih, kita catat nilai <strong>Inertia</strong>-nya. Ingat, Inertia adalah jumlah kuadrat jarak antara setiap titik data dan centroid terdekatnya. Semakin rendah Inertia, semakin baik cluster-cluster tersebut (dalam hal kepadatan).</p></li>
+<li><p><strong>Plot Nilai Inertia terhadap Jumlah Cluster (( K )):</strong> Kita kemudian membuat grafik yang menunjukkan nilai Inertia pada sumbu y dan jumlah cluster (( K )) pada sumbu x.</p></li>
+<li><p><strong>Cari Titik “Siku” (Elbow):</strong> Bentuk grafik yang dihasilkan biasanya akan menurun seiring dengan meningkatnya jumlah cluster. Tujuannya adalah untuk mengidentifikasi titik di mana penurunan Inertia mulai melambat secara signifikan, membentuk визуальный “siku” (elbow). 拐️</p></li>
+<li><p><strong>Pilih ( K ) pada Titik Siku:</strong> Jumlah cluster (( K )) yang sesuai dengan titik siku ini sering dianggap sebagai jumlah cluster yang optimal. Penambahan lebih banyak cluster setelah titik ini tidak memberikan pengurangan Inertia yang substansial, yang mengindikasikan diminishing returns.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+
+<span class="c1"># Asumsi kamu sudah memiliki variabel data_iris</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_iris</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># Fitur dataset</span>
+
+<span class="c1"># Tentukan range jumlah cluster yang mau diuji</span>
+<span class="n">k_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="n">inertias</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Hitung inertia untuk tiap K dengan parameter KMeans custom</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">k_range</span><span class="p">:</span>
+    <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span>
+        <span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span>
+        <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span>
+        <span class="n">n_init</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="mf">0.000001</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">copy_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;lloyd&#39;</span>
+    <span class="p">)</span>
+    <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">inertias</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+<span class="c1"># Tampilkan nilai inertia per K</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nilai Inertia per K:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inertia</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">k_range</span><span class="p">,</span> <span class="n">inertias</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;K = </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: Inertia = </span><span class="si">{</span><span class="n">inertia</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nilai Inertia per K:
+K = 2: Inertia = 152.35
+K = 3: Inertia = 78.86
+K = 4: Inertia = 57.35
+K = 5: Inertia = 46.47
+K = 6: Inertia = 39.07
+K = 7: Inertia = 34.31
+K = 8: Inertia = 30.48
+K = 9: Inertia = 29.91
+K = 10: Inertia = 28.55
+K = 11: Inertia = 26.51
+K = 12: Inertia = 25.86
+K = 13: Inertia = 23.42
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="interpretasi-grafik-elbow">
+<h3>Interpretasi Grafik Elbow<a class="headerlink" href="#interpretasi-grafik-elbow" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Penurunan Curam:</strong> Bagian awal grafik biasanya menunjukkan penurunan Inertia yang curam saat kita menambahkan lebih banyak cluster. Ini karena setiap titik data menjadi lebih dekat dengan centroidnya sendiri.</p></li>
+<li><p><strong>Titik Siku:</strong> Titik di mana kurva mulai melandai. Ini adalah indikasi bahwa kita telah menemukan sebagian besar struktur dalam data, dan menambahkan lebih banyak cluster tidak terlalu meningkatkan model.</p></li>
+<li><p><strong>Penurunan Landai:</strong> Setelah titik siku, penambahan lebih banyak cluster hanya menghasilkan penurunan Inertia yang kecil. Ini bisa mengindikasikan bahwa kita mulai membagi cluster yang sebenarnya menjadi sub-cluster yang kurang bermakna.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot Elbow Method</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">k_range</span><span class="p">,</span> <span class="n">inertias</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Elbow Method - Menentukan K Optimal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Jumlah Cluster (K)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Inertia&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">k_range</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/07429b69a3f13cfd3e62e6ad264b6aa50a872033f7c8bceaadbbd12336747d1d.png" src="_images/07429b69a3f13cfd3e62e6ad264b6aa50a872033f7c8bceaadbbd12336747d1d.png" />
+</div>
+</div>
+<p>dalam hal ini
+Tentu, berikut adalah konten penjelasan metode Elbow yang diformat agar sesuai dengan cell Markdown di Jupyter Notebook atau Google Colab (.ipynb). Anda dapat menyalin seluruh teks di bawah ini dan menempelkannya ke dalam cell Markdown:</p>
+<p>Markdown</p>
+</section>
+</section>
+<section id="metode-elbow-menentukan-jumlah-cluster-optimal-k-dalam-k-means-fokus-pada-k-3">
+<h2>Metode Elbow: Menentukan Jumlah Cluster Optimal (K) dalam K-Means (Fokus pada K=3)<a class="headerlink" href="#metode-elbow-menentukan-jumlah-cluster-optimal-k-dalam-k-means-fokus-pada-k-3" title="Link to this heading">#</a></h2>
+<p>Metode <strong>Elbow</strong> adalah teknik visual yang populer digunakan untuk menentukan jumlah cluster (( K )) yang optimal dalam algoritma K-Means. Kita melatih K-Means dengan berbagai nilai ( K ) dan mengamati perubahan nilai <strong>Inertia</strong>.</p>
+<section id="interpretasi-grafik-elbow-dengan-siku-di-k-3">
+<h3>Interpretasi Grafik Elbow dengan Siku di K=3<a class="headerlink" href="#interpretasi-grafik-elbow-dengan-siku-di-k-3" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Inertia terhadap jumlah cluster (( K )). Jika kita mengamati sebuah <strong>penurunan Inertia yang signifikan</strong> saat kita meningkatkan ( K ) dari 1 ke 2, dan kemudian penurunan yang masih cukup besar dari 2 ke <strong>3</strong>, namun setelah ( K = 3 ), penurunan Inertia menjadi jauh lebih landai, maka kita dapat menginterpretasikannya sebagai berikut:</p></li>
+<li><p>Dalam skenario ini, ( K = 3 ) menjadi kandidat yang kuat untuk jumlah cluster optimal. Mengapa?</p></li>
+<li><p>Sebelum ( K = 3 ): Penambahan cluster secara substansial mengurangi Inertia, yang berarti titik-titik data menjadi lebih dekat dengan centroid cluster mereka. Struktur data yang signifikan sedang terungkap.
+Pada ( K = 3 ): Kita mencapai titik di mana penambahan cluster lebih lanjut tidak lagi memberikan pengurangan Inertia yang dramatis. Manfaat dari penambahan cluster tambahan mulai berkurang.</p></li>
+<li><p>Setelah ( K = 3 ): Penurunan Inertia menjadi lebih bertahap. Ini bisa mengindikasikan bahwa kita mulai membagi cluster yang sebenarnya menjadi sub-cluster yang mungkin tidak terlalu bermakna atau hanya menangkap noise dalam data</p></li>
+</ul>
+<p>jadi kesimpulannya data yang clusternya optimal dalam adalah k = 3</p>
+</section>
+</section>
+<section id="memahami-silhouette-score-dalam-clustering">
+<h2>Memahami Silhouette Score dalam Clustering<a class="headerlink" href="#memahami-silhouette-score-dalam-clustering" title="Link to this heading">#</a></h2>
+<p><strong>Silhouette Score</strong> adalah sebuah metrik yang digunakan untuk mengevaluasi kualitas pengelompokan (clustering) data. Metrik ini mengukur seberapa mirip suatu objek dengan cluster-nya sendiri dibandingkan dengan cluster lain. Silhouette Score memberikan nilai antara -1 dan 1, di mana nilai yang lebih tinggi menunjukkan hasil clustering yang lebih baik. 👍</p>
+<section id="rumus-silhouette-score">
+<h3>Rumus Silhouette Score<a class="headerlink" href="#rumus-silhouette-score" title="Link to this heading">#</a></h3>
+<p>Untuk setiap titik data ( i ), Silhouette Score ( s(i) ) dihitung sebagai berikut:</p>
+<div class="math notranslate nohighlight">
+\[
+s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}
+\]</div>
+<p>Dimana:</p>
+<ul class="simple">
+<li><p>( a(i) ) adalah <strong>rata-rata jarak intra-cluster</strong> untuk titik data ( i ). Ini adalah rata-rata jarak antara titik ( i ) dan semua titik lain dalam cluster yang sama. Semakin kecil nilai ( a(i) ), semakin baik titik ( i ) cocok dengan cluster-nya sendiri.</p></li>
+<li><p>( b(i) ) adalah <strong>rata-rata jarak nearest-cluster</strong> untuk titik data ( i ). Ini adalah jarak rata-rata antara titik ( i ) dan semua titik dalam cluster <em>terdekat</em> yang berbeda dari cluster titik ( i ). Semakin besar nilai ( b(i) ), semakin baik pemisahan antara cluster.</p></li>
+</ul>
+<p><strong>Silhouette Score untuk seluruh clustering</strong> adalah rata-rata dari Silhouette Score untuk semua titik data dalam dataset.</p>
+</section>
+<section id="interpretasi-nilai-silhouette-score">
+<h3>Interpretasi Nilai Silhouette Score<a class="headerlink" href="#interpretasi-nilai-silhouette-score" title="Link to this heading">#</a></h3>
+<p><strong>Catatan mengenai nilai rata-rata Silhouette Score untuk keseluruhan clustering:</strong></p>
+<ul class="simple">
+<li><p><strong>Skor di atas 0.7:</strong> Dianggap sebagai indikasi <strong>clustering yang kuat</strong>, di mana cluster-cluster terpisah dengan baik.</p></li>
+<li><p><strong>Skor antara 0.5 dan 0.7:</strong> Dianggap sebagai <strong>clustering yang wajar</strong>.</p></li>
+<li><p><strong>Skor antara 0.25 dan 0.5:</strong> Dianggap sebagai <strong>clustering yang lemah</strong>, yang berarti cluster-cluster mungkin tumpang tindih.</p></li>
+<li><p><strong>Skor di bawah 0.25:</strong> Menunjukkan <strong>clustering yang buruk</strong>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">silhouette_score</span><span class="p">,</span> <span class="n">silhouette_samples</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Gunakan variabel data_iris yang sudah dimiliki</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_iris</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># Menggunakan semua fitur iris</span>
+
+<span class="c1"># Range jumlah cluster (K) yang diuji</span>
+<span class="n">k_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">silhouette_scores</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">cluster_results</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Simpan label dan sample silhouette untuk plotting terpisah</span>
+
+<span class="c1"># Hitung Silhouette Score dan simpan hasil untuk visualisasi nanti</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">k_range</span><span class="p">:</span>
+    <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span>
+        <span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span>
+        <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span>
+        <span class="n">n_init</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="mf">0.000001</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">copy_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;lloyd&#39;</span>
+    <span class="p">)</span>
+    <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">silhouette_score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cluster_labels</span><span class="p">)</span>
+    <span class="n">silhouette_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;K = </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: Silhouette Score = </span><span class="si">{</span><span class="n">score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Simpan hasil untuk plotting nanti</span>
+    <span class="n">cluster_results</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="n">cluster_labels</span><span class="p">,</span>
+        <span class="s1">&#39;sample_silhouette_values&#39;</span><span class="p">:</span> <span class="n">silhouette_samples</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cluster_labels</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="c1"># ---- Silhouette Plot per Cluster ----</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">k_range</span><span class="p">:</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">cluster_results</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span>
+    <span class="n">sample_silhouette_values</span> <span class="o">=</span> <span class="n">cluster_results</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;sample_silhouette_values&#39;</span><span class="p">]</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">y_lower</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="n">ith_cluster_silhouette_values</span> <span class="o">=</span> <span class="n">sample_silhouette_values</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span>
+        <span class="n">ith_cluster_silhouette_values</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="n">size_cluster_i</span> <span class="o">=</span> <span class="n">ith_cluster_silhouette_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_upper</span> <span class="o">=</span> <span class="n">y_lower</span> <span class="o">+</span> <span class="n">size_cluster_i</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Spectral</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">k</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_betweenx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y_lower</span><span class="p">,</span> <span class="n">y_upper</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ith_cluster_silhouette_values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="p">(</span><span class="n">y_lower</span> <span class="o">+</span> <span class="n">y_upper</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Cluster </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+        <span class="n">y_lower</span> <span class="o">=</span> <span class="n">y_upper</span> <span class="o">+</span> <span class="mi">10</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Silhouette Plot for K=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Silhouette Coefficient Values&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Cluster Label&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># ---- Plot Silhouette Score per K ----</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">k_range</span><span class="p">,</span> <span class="n">silhouette_scores</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Silhouette Score per K (Iris Dataset)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Jumlah Cluster (K)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Silhouette Score&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">k_range</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Tampilkan K optimal berdasarkan Silhouette Score tertinggi</span>
+<span class="n">optimal_k</span> <span class="o">=</span> <span class="n">k_range</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">silhouette_scores</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">K dengan Silhouette Score terbaik adalah: K = </span><span class="si">{</span><span class="n">optimal_k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>K = 2: Silhouette Score = 0.6810
+K = 3: Silhouette Score = 0.5512
+K = 4: Silhouette Score = 0.4976
+</pre></div>
+</div>
+<img alt="_images/7cb84f65867395da72f17a4607c3b7cc3e8a6bdc57d3ea7285b296cc150d57a6.png" src="_images/7cb84f65867395da72f17a4607c3b7cc3e8a6bdc57d3ea7285b296cc150d57a6.png" />
+<img alt="_images/4832874e38ab12cf43f170f321f8eac2a8ba54a72286ada41ef9e068d751cee7.png" src="_images/4832874e38ab12cf43f170f321f8eac2a8ba54a72286ada41ef9e068d751cee7.png" />
+<img alt="_images/ba50711ee40d6d5edcca9ead688b077032dfee945a63c1d33c45d1e8905699c9.png" src="_images/ba50711ee40d6d5edcca9ead688b077032dfee945a63c1d33c45d1e8905699c9.png" />
+<img alt="_images/46f3ddc852a90607ae2411442c1bd483a20895e47cf8c6773d89226d94862bcb.png" src="_images/46f3ddc852a90607ae2411442c1bd483a20895e47cf8c6773d89226d94862bcb.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>K dengan Silhouette Score terbaik adalah: K = 2
+</pre></div>
+</div>
+</div>
+</div>
+<p>Berdasarkan hasil Silhouette Score yang Anda berikan:</p>
+<ul class="simple">
+<li><p><strong>K = 2: Silhouette Score = 0.6810</strong></p>
+<ul>
+<li><p>Nilai Silhouette Score sebesar 0.6810 untuk ( K = 2 ) menunjukkan kualitas clustering yang <strong>cukup baik</strong> hingga <strong>kuat</strong>.</p></li>
+<li><p>Nilai ini mendekati 0.7, yang umumnya dianggap sebagai indikasi bahwa cluster-cluster terpisah dengan baik.</p></li>
+<li><p>Sebagian besar titik data kemungkinan besar berada di dalam cluster yang tepat dan jauh dari batas keputusan antara dua cluster tersebut.</p></li>
+<li><p>Dapat diartikan bahwa pembagian data menjadi dua cluster menghasilkan pemisahan yang jelas antar kelompok.</p></li>
+</ul>
+</li>
+<li><p><strong>K = 3: Silhouette Score = 0.5512</strong></p>
+<ul>
+<li><p>Nilai Silhouette Score sebesar 0.5512 untuk ( K = 3 ) menunjukkan kualitas clustering yang <strong>wajar</strong>.</p></li>
+<li><p>Skor ini lebih rendah dari saat ( K = 2 ), yang mengindikasikan bahwa menambahkan cluster ketiga mungkin membuat beberapa titik data menjadi lebih dekat dengan batas keputusan cluster lain atau cluster yang terbentuk tidak sepadat sebelumnya.</p></li>
+<li><p>Meskipun masih di atas 0.5, ada kemungkinan beberapa titik data tidak sejelas penugasannya dibandingkan dengan kasus ( K = 2 ).</p></li>
+</ul>
+</li>
+<li><p><strong>K = 4: Silhouette Score = 0.4976</strong></p>
+<ul>
+<li><p>Nilai Silhouette Score sebesar 0.4976 untuk ( K = 4 ) menunjukkan kualitas clustering yang <strong>lemah</strong> hingga <strong>wajar</strong>.</p></li>
+<li><p>Penurunan lebih lanjut pada Silhouette Score ini mengisyaratkan bahwa dengan empat cluster, pemisahan antar cluster menjadi kurang jelas.</p></li>
+<li><p>Kemungkinan ada lebih banyak titik data yang berada di dekat atau bahkan tumpang tindih dengan cluster lain.</p></li>
+<li><p>Penambahan cluster keempat tampaknya tidak meningkatkan kualitas pemisahan secara keseluruhan dan justru cenderung memperburuknya dibandingkan dengan ( K = 2 ) dan ( K = 3 ).</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="kesimpulan-sementara">
+<h3>Kesimpulan Sementara<a class="headerlink" href="#kesimpulan-sementara" title="Link to this heading">#</a></h3>
+<p>Berdasarkan nilai Silhouette Score ini, <strong>( K = 2 )</strong> tampaknya memberikan hasil clustering yang terbaik untuk dataset Anda (dalam hal kohesi dan pemisahan cluster) dibandingkan dengan ( K = 3 ) dan ( K = 4 ). Meskipun ( K = 3 ) masih menunjukkan clustering yang wajar, penambahan cluster menjadi 4 menghasilkan penurunan kualitas pemisahan yang lebih signifikan.</p>
+<p>Penting untuk diingat bahwa Silhouette Score hanyalah salah satu metrik evaluasi. Pertimbangan lain seperti pemahaman domain dan hasil visualisasi (misalnya, dari Silhouette Plot individual) juga penting dalam menentukan jumlah cluster yang paling bermakna untuk data.</p>
+</section>
+<section id="penggunaan-silhouette-score-dalam-praktik">
+<h3>Penggunaan Silhouette Score dalam Praktik 🛠️<a class="headerlink" href="#penggunaan-silhouette-score-dalam-praktik" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Evaluasi Kualitas Clustering:</strong> Silhouette Score memberikan gambaran yang jelas tentang seberapa baik objek dikelompokkan. Nilai rata-rata yang lebih tinggi untuk seluruh dataset menunjukkan clustering yang lebih baik.</p></li>
+<li><p><strong>Memilih Jumlah Cluster Optimal:</strong> Silhouette Score juga dapat digunakan untuk membantu menentukan jumlah cluster yang optimal dalam algoritma seperti K-Means. Caranya adalah dengan menghitung Silhouette Score untuk berbagai jumlah cluster dan memilih jumlah cluster yang menghasilkan skor tertinggi.</p></li>
+</ol>
+</section>
+<section id="kelebihan-silhouette-score">
+<h3>Kelebihan Silhouette Score<a class="headerlink" href="#kelebihan-silhouette-score" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Memberikan metrik tunggal yang intuitif untuk mengevaluasi kualitas clustering.</p></li>
+<li><p>Mempertimbangkan baik kohesi (seberapa dekat titik-titik dalam cluster) maupun pemisahan (seberapa jauh antar cluster).</p></li>
+<li><p>Dapat memberikan wawasan tentang apakah beberapa cluster terlalu dekat atau tumpang tindih.</p></li>
+</ul>
+</section>
+<section id="kekurangan-silhouette-score">
+<h3>Kekurangan Silhouette Score<a class="headerlink" href="#kekurangan-silhouette-score" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Silhouette Score mengasumsikan bahwa cluster bersifat cembung (convex). Jika cluster memiliki bentuk yang kompleks, skor mungkin tidak mencerminkan kualitas clustering dengan baik.</p></li>
+<li><p>Skor dapat dipengaruhi oleh kepadatan cluster. Cluster dengan kepadatan yang berbeda dapat menghasilkan skor yang tidak sebanding.</p></li>
+</ul>
+<p>Secara keseluruhan, Silhouette Score adalah alat yang berguna untuk mengevaluasi dan membandingkan hasil dari berbagai algoritma clustering atau jumlah cluster yang berbeda. Memahami interpretasi nilainya dapat membantu dalam memilih model clustering yang paling sesuai untuk data Anda.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">K-Means Clustering</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instalasi-library">Instalasi Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-data">Persiapan Data</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-k-means-clustering-pada-dataset-iris">Implementasi K-Means Clustering pada Dataset Iris</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">K-Means Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-langkah-implementasi">Langkah-langkah Implementasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-visualisasi">Hasil Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-tambahan">Informasi tambahan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-akhir-k-means-clustering">Hasil Akhir K-Means Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#centroid-akhir">Centroid Akhir:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-assignment-untuk-setiap-titik-data">Cluster Assignment untuk Setiap Titik Data:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#centroid-akhir-per-fitur-setiap-cluster">Centroid Akhir per Fitur (Setiap Cluster):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-singkat">Interpretasi Singkat:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-inertia-dalam-k-means-clustering">Memahami Inertia dalam K-Means Clustering</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-inertia">Apa Itu Inertia?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rumus-inertia">Rumus Inertia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#peran-inertia-dalam-menentukan-jumlah-klaster-optimal-k">Peran Inertia dalam Menentukan Jumlah Klaster Optimal (K)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-nilai-inertia">Interpretasi Nilai Inertia</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-kode-mencari-inertia-untuk-k-means-clustering">Penjelasan Kode: Mencari Inertia untuk K-Means Clustering</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-elbow-menentukan-jumlah-cluster-optimal-dalam-k-means">Metode Elbow: Menentukan Jumlah Cluster Optimal dalam K-Means</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-kerja-metode-elbow">Cara Kerja Metode Elbow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-grafik-elbow">Interpretasi Grafik Elbow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-elbow-menentukan-jumlah-cluster-optimal-k-dalam-k-means-fokus-pada-k-3">Metode Elbow: Menentukan Jumlah Cluster Optimal (K) dalam K-Means (Fokus pada K=3)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-grafik-elbow-dengan-siku-di-k-3">Interpretasi Grafik Elbow dengan Siku di K=3</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-silhouette-score-dalam-clustering">Memahami Silhouette Score dalam Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rumus-silhouette-score">Rumus Silhouette Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-nilai-silhouette-score">Interpretasi Nilai Silhouette Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-sementara">Kesimpulan Sementara</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penggunaan-silhouette-score-dalam-praktik">Penggunaan Silhouette Score dalam Praktik 🛠️</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kelebihan-silhouette-score">Kelebihan Silhouette Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kekurangan-silhouette-score">Kekurangan Silhouette Score</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Yudha Caesar Maulana
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
