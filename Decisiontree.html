@@ -1,0 +1,1234 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Memahami Decision Tree: Dari Konsep Hingga Perhitungan &#8212; Penambangan Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Decisiontree';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Fuzzy C-Mean Clustering" href="Fuzzy_C_Mean_Clustering.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/yudha.png" class="logo__image only-light" alt="Penambangan Data - Home"/>
+    <img src="_static/yudha.png" class="logo__image only-dark pst-js-only" alt="Penambangan Data - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to Data Mining
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="Data_Understanding.html"><strong>Data Understanding</strong></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="Outlier_Detection.html">Outlier Detection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="LOF.html"><strong>Local Outlier Factor (LOF)</strong></a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="Data_Preparation.html"><strong>Data Preparation</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="UTS_Pendat.html">Data Understanding</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="K_Means_Clustering.html">K-Means Clustering</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="Fuzzy_C_Mean_Clustering.html"><strong>Fuzzy C-Mean Clustering</strong></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Memahami Decision Tree: Dari Konsep Hingga Perhitungan</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FDecisiontree.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Decisiontree.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Memahami Decision Tree: Dari Konsep Hingga Perhitungan</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#studi-kasus-dataset-prediksi-aktivitas">Studi Kasus: Dataset Prediksi Aktivitas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-lengkap">Perhitungan Manual Lengkap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsep-dan-rumus-inti">Konsep dan Rumus Inti</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entropy-ukuran-ketidakpastian"><strong>1. Entropy (Ukuran Ketidakpastian)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#information-gain-pengurangan-ketidakpastian"><strong>2. Information Gain (Pengurangan Ketidakpastian)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-pembangunan-pohon-lengkap-dengan-perhitungan"><strong>Proses Pembangunan Pohon (Lengkap dengan Perhitungan)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-entropy-total-dataset-entropy-s"><strong>Langkah 1: Menghitung Entropy Total Dataset (Entropy(S))</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-menentukan-node-akar-root-node"><strong>Langkah 2: Menentukan Node Akar (Root Node)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-analisis-fitur-suhu"><strong>A. Analisis Fitur <code class="docutils literal notranslate"><span class="pre">Suhu</span></code></strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-analisis-fitur-kelembaban"><strong>B. Analisis Fitur <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code></strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#c-keputusan-node-akar"><strong>C. Keputusan Node Akar</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-membangun-cabang-dan-sub-cabang"><strong>Langkah 3: Membangun Cabang dan Sub-Cabang</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-akhir-pohon-keputusan-final"><strong>Hasil Akhir: Pohon Keputusan Final</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-decision-tree-dengan-scikit-learn">Implementasi Decision Tree dengan Scikit-learn</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-data-dan-diskretisasi">Persiapan Data dan Diskretisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fungsi-hitung-entropy">Fungsi <code class="docutils literal notranslate"><span class="pre">hitung_entropy</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-fitur-terbaik-dengan-information-gain">Menentukan Fitur Terbaik dengan Information Gain</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-decision-tree-dengan-scikit-learn-dan-visualisasi">Implementasi Decision Tree dengan Scikit-learn dan Visualisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-visualisasi-pohon-keputusan-scikit-learn">Memahami Visualisasi Pohon Keputusan Scikit-learn</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-dan-informasi-dalam-setiap-node"><strong>Struktur dan Informasi dalam Setiap Node</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="memahami-decision-tree-dari-konsep-hingga-perhitungan">
+<h1>Memahami Decision Tree: Dari Konsep Hingga Perhitungan<a class="headerlink" href="#memahami-decision-tree-dari-konsep-hingga-perhitungan" title="Link to this heading">#</a></h1>
+<p>Decision Tree (Pohon Keputusan) adalah algoritma <em>machine learning</em> yang membangun model prediksi dalam bentuk struktur pohon. Algoritma ini memecah dataset menjadi himpunan data yang lebih kecil dan lebih murni secara bertahap, di mana setiap pemecahan didasarkan pada fitur data yang memberikan informasi paling banyak.</p>
+<hr class="docutils" />
+<section id="studi-kasus-dataset-prediksi-aktivitas">
+<h2>Studi Kasus: Dataset Prediksi Aktivitas<a class="headerlink" href="#studi-kasus-dataset-prediksi-aktivitas" title="Link to this heading">#</a></h2>
+<p>Kita akan menggunakan studi kasus dengan 15 data untuk memprediksi <code class="docutils literal notranslate"><span class="pre">Aktivitas</span></code> berdasarkan <code class="docutils literal notranslate"><span class="pre">Suhu</span></code> dan <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code>. Tujuannya adalah membangun model yang bisa menjawab: “Dengan kondisi Suhu dan Kelembaban tertentu, aktivitas apa yang paling mungkin dilakukan?”
+berikut cuplikan datanya
+data suhu, kelembapan dan aktivitas</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Suhu (°C)</p></th>
+<th class="head text-center"><p>Kelembaban (%)</p></th>
+<th class="head text-left"><p>Aktivitas</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>18</p></td>
+<td class="text-center"><p>75</p></td>
+<td class="text-left"><p>Belajar</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>21</p></td>
+<td class="text-center"><p>60</p></td>
+<td class="text-left"><p>Bermain</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>30</p></td>
+<td class="text-center"><p>85</p></td>
+<td class="text-left"><p>Istirahat</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>25</p></td>
+<td class="text-center"><p>70</p></td>
+<td class="text-left"><p>Bermain</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>32</p></td>
+<td class="text-center"><p>90</p></td>
+<td class="text-left"><p>Istirahat</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>17</p></td>
+<td class="text-center"><p>55</p></td>
+<td class="text-left"><p>Belajar</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>22</p></td>
+<td class="text-center"><p>65</p></td>
+<td class="text-left"><p>Bermain</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>28</p></td>
+<td class="text-center"><p>78</p></td>
+<td class="text-left"><p>Belajar</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>34</p></td>
+<td class="text-center"><p>88</p></td>
+<td class="text-left"><p>Istirahat</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>19</p></td>
+<td class="text-center"><p>50</p></td>
+<td class="text-left"><p>Belajar</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>27</p></td>
+<td class="text-center"><p>72</p></td>
+<td class="text-left"><p>Bermain</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>29</p></td>
+<td class="text-center"><p>95</p></td>
+<td class="text-left"><p>Istirahat</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>20</p></td>
+<td class="text-center"><p>45</p></td>
+<td class="text-left"><p>Belajar</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>26</p></td>
+<td class="text-center"><p>80</p></td>
+<td class="text-left"><p>Bermain</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>31</p></td>
+<td class="text-center"><p>83</p></td>
+<td class="text-left"><p>Istirahat</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="perhitungan-manual-lengkap">
+<h2>Perhitungan Manual Lengkap<a class="headerlink" href="#perhitungan-manual-lengkap" title="Link to this heading">#</a></h2>
+<p>Untuk melihat detail perhitungan Entropy dan Information Gain secara manual langkah demi langkah, Anda bisa merujuk pada spreadsheet berikut:</p>
+<p><a class="reference external" href="https://docs.google.com/spreadsheets/d/1ze6s7lJJF80Gi8F8uT4agDDTlD75SlR8/edit?usp=sharing&amp;amp;ouid=118339560445514012978&amp;amp;rtpof=true&amp;amp;sd=true">Perhitungan Manual Decision Tree di Google Sheets</a></p>
+<p>Spreadsheet ini menunjukkan bagaimana angka-angka Entropy dan Information Gain yang kita hitung di notebook ini didapatkan dari data awal, memperjelas proses di balik algoritma Decision Tree.</p>
+<hr class="docutils" />
+</section>
+<section id="konsep-dan-rumus-inti">
+<h2>Konsep dan Rumus Inti<a class="headerlink" href="#konsep-dan-rumus-inti" title="Link to this heading">#</a></h2>
+<section id="entropy-ukuran-ketidakpastian">
+<h3><strong>1. Entropy (Ukuran Ketidakpastian)</strong><a class="headerlink" href="#entropy-ukuran-ketidakpastian" title="Link to this heading">#</a></h3>
+<p>Entropy mengukur “keacakan” dalam sebuah kelompok data. Nilai 0 menandakan kelompok yang murni (semua isinya sama), sedangkan nilai yang lebih tinggi menandakan kelompok yang lebih beragam.</p>
+<div class="math notranslate nohighlight">
+\[Entropy(S) = \sum_{i=1}^{c} -p_i \log_2(p_i)\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(p_i\)</span> adalah proporsi kelas ke-i.</p></li>
+</ul>
+</section>
+<section id="information-gain-pengurangan-ketidakpastian">
+<h3><strong>2. Information Gain (Pengurangan Ketidakpastian)</strong><a class="headerlink" href="#information-gain-pengurangan-ketidakpastian" title="Link to this heading">#</a></h3>
+<p>Information Gain mengukur seberapa efektif sebuah fitur dalam mengurangi entropy (ketidakpastian). Fitur dengan Gain tertinggi adalah yang terbaik untuk memecah data.</p>
+<div class="math notranslate nohighlight">
+\[Gain(S, A) = Entropy(S) - \text{Rata-rata Entropy Tertimbang Fitur A}\]</div>
+<hr class="docutils" />
+</section>
+</section>
+<section id="proses-pembangunan-pohon-lengkap-dengan-perhitungan">
+<h2><strong>Proses Pembangunan Pohon (Lengkap dengan Perhitungan)</strong><a class="headerlink" href="#proses-pembangunan-pohon-lengkap-dengan-perhitungan" title="Link to this heading">#</a></h2>
+<section id="langkah-1-menghitung-entropy-total-dataset-entropy-s">
+<h3><strong>Langkah 1: Menghitung Entropy Total Dataset (Entropy(S))</strong><a class="headerlink" href="#langkah-1-menghitung-entropy-total-dataset-entropy-s" title="Link to this heading">#</a></h3>
+<p>Pertama, kita hitung entropy awal dari keseluruhan 15 data.</p>
+<ul class="simple">
+<li><p><strong>Distribusi Data:</strong> 5 Belajar, 5 Bermain, 5 Istirahat.</p></li>
+<li><p><strong>Proporsi:</strong> <span class="math notranslate nohighlight">\(p(\text{Belajar}) = 5/15\)</span>, <span class="math notranslate nohighlight">\(p(\text{Bermain}) = 5/15\)</span>, <span class="math notranslate nohighlight">\(p(\text{Istirahat}) = 5/15\)</span>.</p></li>
+<li><p><strong>Perhitungan:</strong>
+<span class="math notranslate nohighlight">\(Entropy(S) = -(\frac{5}{15})\log_2(\frac{5}{15}) -(\frac{5}{15})\log_2(\frac{5}{15}) -(\frac{5}{15})\log_2(\frac{5}{15})\)</span>
+<span class="math notranslate nohighlight">\(Entropy(S) = 0.528 + 0.528 + 0.528 = \textbf{1.585}\)</span></p></li>
+</ul>
+<p>Nilai <strong>1.585</strong> adalah ketidakpastian awal kita.</p>
+</section>
+<section id="langkah-2-menentukan-node-akar-root-node">
+<h3><strong>Langkah 2: Menentukan Node Akar (Root Node)</strong><a class="headerlink" href="#langkah-2-menentukan-node-akar-root-node" title="Link to this heading">#</a></h3>
+<p>Kita hitung Information Gain untuk setiap fitur.</p>
+<section id="a-analisis-fitur-suhu">
+<h4><strong>A. Analisis Fitur <code class="docutils literal notranslate"><span class="pre">Suhu</span></code></strong><a class="headerlink" href="#a-analisis-fitur-suhu" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><strong>Tabel Kontingensi <code class="docutils literal notranslate"><span class="pre">Suhu</span></code> vs <code class="docutils literal notranslate"><span class="pre">Aktivitas</span></code>:</strong>
+| Suhu_Kategori | Belajar | Bermain | Istirahat | Total |
+| :— | :—: | :—: | :—: | :—: |
+| Dingin | 4 | 2 | 0 | 6 |
+| Sedang | 1 | 3 | 0 | 4 |
+| Panas | 0 | 0 | 5 | 5 |</p></li>
+<li><p><strong>Hitung Entropy untuk Setiap Kategori Suhu:</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Entropy(\text{Dingin}) = -(\frac{4}{6})\log_2(\frac{4}{6}) - (\frac{2}{6})\log_2(\frac{2}{6}) = \textbf{0.918}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Entropy(\text{Sedang}) = -(\frac{1}{4})\log_2(\frac{1}{4}) - (\frac{3}{4})\log_2(\frac{3}{4}) = \textbf{0.811}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Entropy(\text{Panas}) = -(\frac{5}{5})\log_2(\frac{5}{5}) = \textbf{0}\)</span> (Murni)</p></li>
+</ul>
+</li>
+<li><p><strong>Hitung Rata-Rata Entropy Tertimbang untuk <code class="docutils literal notranslate"><span class="pre">Suhu</span></code>:</strong>
+<span class="math notranslate nohighlight">\(Entropy(\text{Suhu}) = (\frac{6}{15})Entropy(\text{Dingin}) + (\frac{4}{15})Entropy(\text{Sedang}) + (\frac{5}{15})Entropy(\text{Panas})\)</span>
+<span class="math notranslate nohighlight">\(Entropy(\text{Suhu}) = (\frac{6}{15}) \times 0.918 + (\frac{4}{15}) \times 0.811 + (\frac{5}{15}) \times 0 = \textbf{0.584}\)</span></p></li>
+<li><p><strong>Hitung Information Gain untuk <code class="docutils literal notranslate"><span class="pre">Suhu</span></code>:</strong>
+<span class="math notranslate nohighlight">\(Gain(\text{Suhu}) = Entropy(S) - Entropy(\text{Suhu}) = 1.585 - 0.584 = \textbf{1.001}\)</span></p></li>
+</ol>
+</section>
+<section id="b-analisis-fitur-kelembaban">
+<h4><strong>B. Analisis Fitur <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code></strong><a class="headerlink" href="#b-analisis-fitur-kelembaban" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><strong>Tabel Kontingensi <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code> vs <code class="docutils literal notranslate"><span class="pre">Aktivitas</span></code>:</strong>
+| Kelembaban_Kategori | Belajar | Bermain | Istirahat | Total |
+| :— | :—: | :—: | :—: | :—: |
+| Rendah | 3 | 2 | 0 | 5 |
+| Normal | 2 | 3 | 2 | 7 |
+| Tinggi | 0 | 0 | 3 | 3 |</p></li>
+<li><p><strong>Hitung Entropy untuk Setiap Kategori Kelembaban:</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Entropy(\text{Rendah}) = -(\frac{3}{5})\log_2(\frac{3}{5}) - (\frac{2}{5})\log_2(\frac{2}{5}) = \textbf{0.971}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Entropy(\text{Normal}) = -(\frac{2}{7})\log_2(\frac{2}{7}) - (\frac{3}{7})\log_2(\frac{3}{7}) - (\frac{2}{7})\log_2(\frac{2}{7}) = \textbf{1.557}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Entropy(\text{Tinggi}) = -(\frac{3}{3})\log_2(\frac{3}{3}) = \textbf{0}\)</span> (Murni)</p></li>
+</ul>
+</li>
+<li><p><strong>Hitung Rata-Rata Entropy Tertimbang untuk <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code>:</strong>
+<span class="math notranslate nohighlight">\(Entropy(\text{Kelembaban}) = (\frac{5}{15}) \times 0.971 + (\frac{7}{15}) \times 1.557 + (\frac{3}{15}) \times 0 = \textbf{1.050}\)</span></p></li>
+<li><p><strong>Hitung Information Gain untuk <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code>:</strong>
+<span class="math notranslate nohighlight">\(Gain(\text{Kelembaban}) = Entropy(S) - Entropy(\text{Kelembaban}) = 1.585 - 1.050 = \textbf{0.535}\)</span></p></li>
+</ol>
+</section>
+<section id="c-keputusan-node-akar">
+<h4><strong>C. Keputusan Node Akar</strong><a class="headerlink" href="#c-keputusan-node-akar" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Perbandingan:</strong> <span class="math notranslate nohighlight">\(Gain(\text{Suhu}) = 1.001\)</span> vs <span class="math notranslate nohighlight">\(Gain(\text{Kelembaban}) = 0.535\)</span>.</p></li>
+<li><p><strong>Kesimpulan:</strong> Karena Gain <code class="docutils literal notranslate"><span class="pre">Suhu</span></code> lebih tinggi, <strong><code class="docutils literal notranslate"><span class="pre">Suhu</span></code> dipilih sebagai node akar</strong>.</p></li>
+</ul>
+</section>
+</section>
+<section id="langkah-3-membangun-cabang-dan-sub-cabang">
+<h3><strong>Langkah 3: Membangun Cabang dan Sub-Cabang</strong><a class="headerlink" href="#langkah-3-membangun-cabang-dan-sub-cabang" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Cabang <code class="docutils literal notranslate"><span class="pre">Suhu</span> <span class="pre">=</span> <span class="pre">Panas</span></code></strong>: Dari tabel kontingensi, cabang ini 100% murni <code class="docutils literal notranslate"><span class="pre">Istirahat</span></code>. <strong>Proses berhenti.</strong></p></li>
+<li><p><strong>Cabang <code class="docutils literal notranslate"><span class="pre">Suhu</span> <span class="pre">=</span> <span class="pre">Sedang</span></code></strong>: Tidak murni (1 Belajar, 3 Bermain). Karena tidak ada fitur lain untuk diuji, kita ambil <strong>kelas mayoritas</strong>, yaitu <code class="docutils literal notranslate"><span class="pre">Bermain</span></code>. <strong>Proses berhenti.</strong></p></li>
+<li><p><strong>Cabang <code class="docutils literal notranslate"><span class="pre">Suhu</span> <span class="pre">=</span> <span class="pre">Dingin</span></code></strong>: Tidak murni (4 Belajar, 2 Bermain). Kita uji apakah <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code> bisa memecahnya lebih lanjut.</p>
+<ul class="simple">
+<li><p><strong>Analisis Sub-Cabang:</strong></p>
+<ul>
+<li><p>Entropy Total untuk 6 data ini adalah <strong>0.918</strong>.</p></li>
+<li><p>Rata-rata Entropy Tertimbang <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code> di cabang ini adalah <strong>0.809</strong>.</p></li>
+<li><p>Information Gain = <code class="docutils literal notranslate"><span class="pre">0.918</span> <span class="pre">-</span> <span class="pre">0.809</span></code> = <strong>0.109</strong>.</p></li>
+</ul>
+</li>
+<li><p><strong>Keputusan:</strong> Karena Gain &gt; 0, <strong>kita pecah lagi</strong> berdasarkan <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code>.</p>
+<ul>
+<li><p><strong>Sub-Cabang <code class="docutils literal notranslate"><span class="pre">Kelembaban</span> <span class="pre">=</span> <span class="pre">Rendah</span></code></strong>: Mayoritasnya adalah <code class="docutils literal notranslate"><span class="pre">Belajar</span></code> (3 vs 2). <strong>Kesimpulan: Belajar.</strong></p></li>
+<li><p><strong>Sub-Cabang <code class="docutils literal notranslate"><span class="pre">Kelembaban</span> <span class="pre">=</span> <span class="pre">Normal</span></code></strong>: Terjadi seri (1 vs 1). Ambil mayoritas dari induknya (<code class="docutils literal notranslate"><span class="pre">Suhu=Dingin</span></code>), yaitu <code class="docutils literal notranslate"><span class="pre">Belajar</span></code>. <strong>Kesimpulan: Belajar.</strong></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<hr class="docutils" />
+</section>
+</section>
+<section id="hasil-akhir-pohon-keputusan-final">
+<h2><strong>Hasil Akhir: Pohon Keputusan Final</strong><a class="headerlink" href="#hasil-akhir-pohon-keputusan-final" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Suhu?
+|
+|--- [Panas] ---&gt; Aktivitas: Istirahat
+|
+|--- [Sedang] ---&gt; Aktivitas: Bermain
+|
+|--- [Dingin] ---&gt; Kelembaban?
+                   |
+                   |--- [Rendah] ---&gt; Aktivitas: Belajar
+                   |
+                   |--- [Normal] ---&gt; Aktivitas: Belajar
+</pre></div>
+</div>
+</section>
+<section id="implementasi-decision-tree-dengan-scikit-learn">
+<h2>Implementasi Decision Tree dengan Scikit-learn<a class="headerlink" href="#implementasi-decision-tree-dengan-scikit-learn" title="Link to this heading">#</a></h2>
+<p>Setelah kita memahami cara kerja Decision Tree secara manual dengan menghitung <strong>Entropy</strong> dan <strong>Information Gain</strong>, kini saatnya kita melihat bagaimana proses ini dilakukan secara otomatis menggunakan library <em>machine learning</em> populer, yaitu <strong>Scikit-learn (sklearn)</strong>. Scikit-learn menyediakan implementasi Decision Tree yang efisien dan siap pakai.</p>
+<p>Kita akan menggunakan data yang sudah didiskretisasi sebelumnya, lalu melatih model <code class="docutils literal notranslate"><span class="pre">DecisionTreeClassifier</span></code> dari Scikit-learn untuk membangun pohon keputusan. Hasil pohon yang dibangun oleh Scikit-learn ini seharusnya <strong>konsisten</strong> dengan logika perhitungan manual yang sudah kita lakukan.</p>
+<p>Terakhir, kita akan <strong>memvisualisasikan</strong> pohon yang dihasilkan oleh Scikit-learn untuk melihat strukturnya secara grafis.</p>
+<section id="persiapan-data-dan-diskretisasi">
+<h3>Persiapan Data dan Diskretisasi<a class="headerlink" href="#persiapan-data-dan-diskretisasi" title="Link to this heading">#</a></h3>
+<p>Cell kode ini melakukan langkah-langkah awal untuk mempersiapkan data sebelum digunakan dalam perhitungan manual maupun pelatihan model Decision Tree dengan Scikit-learn.</p>
+<ol class="arabic simple">
+<li><p><strong>Import Library</strong>: Mengimpor semua <em>library</em> Python yang diperlukan untuk manipulasi data (<code class="docutils literal notranslate"><span class="pre">pandas</span></code>), operasi numerik (<code class="docutils literal notranslate"><span class="pre">numpy</span></code>), membangun dan memvisualisasikan Decision Tree (<code class="docutils literal notranslate"><span class="pre">sklearn.tree</span></code>), <em>encoding</em> data kategorikal (<code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.LabelEncoder</span></code>), dan membuat plot (<code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code>).</p></li>
+<li><p><strong>Membuat Dataset</strong>: Mendefinisikan data contoh <code class="docutils literal notranslate"><span class="pre">Suhu</span></code>, <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code>, dan <code class="docutils literal notranslate"><span class="pre">Aktivitas</span></code> dalam bentuk <em>dictionary</em> Python, lalu mengubahnya menjadi pandas DataFrame bernama <code class="docutils literal notranslate"><span class="pre">df</span></code>. DataFrame ini merepresentasikan dataset kita.</p></li>
+<li><p><strong>Diskretisasi Fitur Kontinu</strong>:</p>
+<ul class="simple">
+<li><p>Karena algoritma Decision Tree yang kita bahas di awal bekerja dengan data kategorikal, fitur kontinu seperti <code class="docutils literal notranslate"><span class="pre">Suhu</span></code> dan <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code> perlu diubah menjadi kategori.</p></li>
+<li><p>Didefinisikan <em>bins</em> (rentang) dan <em>labels</em> (nama kategori) untuk <code class="docutils literal notranslate"><span class="pre">Suhu</span></code> (<code class="docutils literal notranslate"><span class="pre">Dingin</span></code>, <code class="docutils literal notranslate"><span class="pre">Sedang</span></code>, <code class="docutils literal notranslate"><span class="pre">Panas</span></code>) dan <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code> (<code class="docutils literal notranslate"><span class="pre">Rendah</span></code>, <code class="docutils literal notranslate"><span class="pre">Normal</span></code>, <code class="docutils literal notranslate"><span class="pre">Tinggi</span></code>).</p></li>
+<li><p>Fungsi <code class="docutils literal notranslate"><span class="pre">pd.cut()</span></code> digunakan untuk mengelompokkan nilai-nilai suhu dan kelembaban ke dalam kategori yang sesuai, dan hasilnya disimpan dalam kolom baru <code class="docutils literal notranslate"><span class="pre">Suhu_Kategori</span></code> dan <code class="docutils literal notranslate"><span class="pre">Kelembaban_Kategori</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Menampilkan Data Hasil Diskretisasi</strong>: Menggunakan fungsi <code class="docutils literal notranslate"><span class="pre">display()</span></code> untuk menampilkan DataFrame yang hanya berisi kolom <code class="docutils literal notranslate"><span class="pre">Suhu_Kategori</span></code>, <code class="docutils literal notranslate"><span class="pre">Kelembaban_Kategori</span></code>, dan <code class="docutils literal notranslate"><span class="pre">Aktivitas</span></code>. Penggunaan <code class="docutils literal notranslate"><span class="pre">display()</span></code> memastikan output ditampilkan sebagai tabel yang rapi di notebook.</p></li>
+</ol>
+<p>Hasil dari cell ini adalah DataFrame yang siap digunakan dengan fitur-fitur yang sudah dikategorikan, sesuai dengan contoh perhitungan manual yang dijelaskan sebelumnya.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span><span class="p">,</span> <span class="n">plot_tree</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Suhu&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">31</span><span class="p">],</span>
+    <span class="s1">&#39;Kelembaban&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">75</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">83</span><span class="p">],</span>
+    <span class="s1">&#39;Aktivitas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Belajar&#39;</span><span class="p">,</span> <span class="s1">&#39;Bermain&#39;</span><span class="p">,</span> <span class="s1">&#39;Istirahat&#39;</span><span class="p">,</span> <span class="s1">&#39;Bermain&#39;</span><span class="p">,</span> <span class="s1">&#39;Istirahat&#39;</span><span class="p">,</span> <span class="s1">&#39;Belajar&#39;</span><span class="p">,</span> <span class="s1">&#39;Bermain&#39;</span><span class="p">,</span> <span class="s1">&#39;Belajar&#39;</span><span class="p">,</span> <span class="s1">&#39;Istirahat&#39;</span><span class="p">,</span> <span class="s1">&#39;Belajar&#39;</span><span class="p">,</span> <span class="s1">&#39;Bermain&#39;</span><span class="p">,</span> <span class="s1">&#39;Istirahat&#39;</span><span class="p">,</span> <span class="s1">&#39;Belajar&#39;</span><span class="p">,</span> <span class="s1">&#39;Bermain&#39;</span><span class="p">,</span> <span class="s1">&#39;Istirahat&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">suhu_bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">suhu_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Dingin&#39;</span><span class="p">,</span> <span class="s1">&#39;Sedang&#39;</span><span class="p">,</span> <span class="s1">&#39;Panas&#39;</span><span class="p">]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Suhu_Kategori&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Suhu&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">suhu_bins</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">suhu_labels</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">kelembaban_bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">kelembaban_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Rendah&#39;</span><span class="p">,</span> <span class="s1">&#39;Normal&#39;</span><span class="p">,</span> <span class="s1">&#39;Tinggi&#39;</span><span class="p">]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Kelembaban_Kategori&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Kelembaban&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">kelembaban_bins</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">kelembaban_labels</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data setelah diskretisasi:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Suhu_Kategori&#39;</span><span class="p">,</span> <span class="s1">&#39;Kelembaban_Kategori&#39;</span><span class="p">,</span> <span class="s1">&#39;Aktivitas&#39;</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data setelah diskretisasi:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Suhu_Kategori</th>
+      <th>Kelembaban_Kategori</th>
+      <th>Aktivitas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Dingin</td>
+      <td>Normal</td>
+      <td>Belajar</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Dingin</td>
+      <td>Rendah</td>
+      <td>Bermain</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Panas</td>
+      <td>Normal</td>
+      <td>Istirahat</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sedang</td>
+      <td>Normal</td>
+      <td>Bermain</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Panas</td>
+      <td>Tinggi</td>
+      <td>Istirahat</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Dingin</td>
+      <td>Rendah</td>
+      <td>Belajar</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Dingin</td>
+      <td>Rendah</td>
+      <td>Bermain</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Sedang</td>
+      <td>Normal</td>
+      <td>Belajar</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Panas</td>
+      <td>Tinggi</td>
+      <td>Istirahat</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Dingin</td>
+      <td>Rendah</td>
+      <td>Belajar</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Sedang</td>
+      <td>Normal</td>
+      <td>Bermain</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Panas</td>
+      <td>Tinggi</td>
+      <td>Istirahat</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Dingin</td>
+      <td>Rendah</td>
+      <td>Belajar</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Sedang</td>
+      <td>Normal</td>
+      <td>Bermain</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Panas</td>
+      <td>Normal</td>
+      <td>Istirahat</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fungsi-hitung-entropy">
+<h3>Fungsi <code class="docutils literal notranslate"><span class="pre">hitung_entropy</span></code><a class="headerlink" href="#fungsi-hitung-entropy" title="Link to this heading">#</a></h3>
+<p>Fungsi Python ini dirancang untuk menghitung <strong>Entropy</strong> dari sebuah kolom data (dalam format pandas Series). Entropy adalah ukuran ketidakpastian atau keacakan dalam sebuah set data.</p>
+<p>Berikut adalah langkah-langkah yang dilakukan oleh fungsi ini:</p>
+<ol class="arabic simple">
+<li><p><strong>Menghitung Frekuensi</strong>: <code class="docutils literal notranslate"><span class="pre">series.value_counts()</span></code> menghitung berapa kali setiap nilai unik muncul dalam kolom data yang diberikan. Hasilnya adalah Series baru di mana indeksnya adalah nilai unik dan nilainya adalah jumlah kemunculannya.</p></li>
+<li><p><strong>Menghitung Probabilitas</strong>: <code class="docutils literal notranslate"><span class="pre">counts</span> <span class="pre">/</span> <span class="pre">counts.sum()</span></code> mengubah hitungan frekuensi menjadi probabilitas dengan membagi jumlah kemunculan setiap nilai unik dengan jumlah total data dalam kolom.</p></li>
+<li><p><strong>Menerapkan Rumus Entropy</strong>: <code class="docutils literal notranslate"><span class="pre">-np.sum(probabilities</span> <span class="pre">*</span> <span class="pre">np.log2(probabilities))</span></code> menerapkan rumus matematika untuk Entropy: <span class="math notranslate nohighlight">\(Entropy(S) = \sum_{i=1}^{c} -p_i \log_2(p_i)\)</span>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">probabilities</span></code> adalah <span class="math notranslate nohighlight">\(p_i\)</span> (probabilitas kelas ke-i).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">np.log2()</span></code> menghitung logaritma basis 2 dari probabilitas.</p></li>
+<li><p>Hasil perkalian probabilitas dan logaritma basis 2-nya dijumlahkan (<code class="docutils literal notranslate"><span class="pre">np.sum()</span></code>).</p></li>
+<li><p>Tanda negatif di depan digunakan sesuai dengan rumus Entropy.</p></li>
+</ul>
+</li>
+<li><p><strong>Mengembalikan Nilai Entropy</strong>: Fungsi mengembalikan nilai tunggal yang merupakan Entropy dari kolom data tersebut.</p></li>
+</ol>
+<p>Fungsi ini adalah blok bangunan dasar untuk menghitung Information Gain, karena Information Gain dihitung berdasarkan pengurangan Entropy sebelum dan sesudah pemecahan data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hitung_entropy</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Menghitung entropy dari sebuah kolom (pandas Series).&quot;&quot;&quot;</span>
+    <span class="c1"># Hitung jumlah kemunculan setiap nilai unik</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="c1"># Hitung probabilitas setiap nilai</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="n">counts</span> <span class="o">/</span> <span class="n">counts</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="c1"># Hitung dan kembalikan nilai entropy</span>
+    <span class="n">entropy</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probabilities</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">probabilities</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">entropy</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="menentukan-fitur-terbaik-dengan-information-gain">
+<h3>Menentukan Fitur Terbaik dengan Information Gain<a class="headerlink" href="#menentukan-fitur-terbaik-dengan-information-gain" title="Link to this heading">#</a></h3>
+<p>Setelah memahami konsep Entropy sebagai ukuran ketidakpastian, kini kita melangkah ke inti pemilihan fitur dalam Decision Tree: <strong>Information Gain</strong>. Kode di bawah ini mengimplementasikan perhitungan Information Gain secara manual untuk menentukan fitur mana (<code class="docutils literal notranslate"><span class="pre">Suhu_Kategori</span></code> atau <code class="docutils literal notranslate"><span class="pre">Kelembaban_Kategori</span></code>) yang paling efektif dalam memecah data dan mengurangi ketidakpastian.</p>
+<p>Fungsi <code class="docutils literal notranslate"><span class="pre">hitung_information_gain</span></code> bekerja seperti ini:</p>
+<ol class="arabic simple">
+<li><p><strong>Mengukur Ketidakpastian Awal</strong>: Pertama, ia menghitung <strong>Entropy Total</strong> dari kolom target (<code class="docutils literal notranslate"><span class="pre">Aktivitas</span></code>) di seluruh dataset. Ini adalah ukuran ketidakpastian <em>sebelum</em> kita memecah data berdasarkan fitur apapun.</p></li>
+<li><p><strong>Mengukur Ketidakpastian Setelah Pemecahan</strong>: Untuk setiap fitur yang diuji (<code class="docutils literal notranslate"><span class="pre">nama_fitur</span></code>), fungsi ini memecah dataset berdasarkan nilai unik fitur tersebut. Kemudian, ia menghitung <strong>Entropy</strong> untuk kolom target di <em>setiap subset</em> data yang dihasilkan dari pemecahan. Entropy dari setiap subset ini kemudian dirata-ratakan dengan bobot sesuai ukuran subsetnya. Ini menghasilkan <strong>Rata-Rata Entropy Tertimbang</strong> fitur tersebut – ukuran ketidakpastian <em>setelah</em> data dipecah oleh fitur tersebut.</p></li>
+<li><p><strong>Menghitung Pengurangan Ketidakpastian</strong>: <strong>Information Gain</strong> dihitung dengan mengurangkan <strong>Rata-Rata Entropy Tertimbang</strong> dari <strong>Entropy Total</strong>.
+$<span class="math notranslate nohighlight">\(Gain(S, A) = Entropy(S) - \text{Rata-rata Entropy Tertimbang Fitur A}\)</span>$
+Nilai Gain yang tinggi menunjukkan bahwa fitur tersebut efektif dalam mengurangi ketidakpastian, menjadikannya kandidat kuat untuk simpul pemecah (splitting node).</p></li>
+</ol>
+<p>Bagian kedua dari kode ini kemudian <strong>menggunakan fungsi</strong> <code class="docutils literal notranslate"><span class="pre">hitung_information_gain</span></code> untuk menghitung Gain untuk <code class="docutils literal notranslate"><span class="pre">Suhu_Kategori</span></code> dan <code class="docutils literal notranslate"><span class="pre">Kelembaban_Kategori</span></code>. Hasilnya dicetak dengan rapi, dan kode secara otomatis <strong>membandingkan</strong> kedua nilai Gain tersebut untuk <strong>menentukan fitur mana yang memiliki Gain tertinggi</strong>. Fitur dengan Gain tertinggi inilah yang akan dipilih sebagai <strong>simpul akar (root node)</strong> pertama dalam pembangunan pohon keputusan kita.</p>
+<p>Ini adalah proses fundamental yang dilakukan oleh Decision Tree untuk memilih fitur terbaik pada setiap langkah pembangunannya, memastikan pohon tumbuh ke arah yang paling efisien dalam mengklasifikasikan data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hitung_information_gain</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">nama_fitur</span><span class="p">,</span> <span class="n">nama_target</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Menghitung Information Gain dari sebuah fitur.&quot;&quot;&quot;</span>
+    <span class="c1"># 1. Hitung entropy total dari keseluruhan dataset</span>
+    <span class="n">entropy_total</span> <span class="o">=</span> <span class="n">hitung_entropy</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">nama_target</span><span class="p">])</span>
+
+    <span class="c1"># 2. Hitung rata-rata entropy tertimbang dari fitur</span>
+    <span class="n">entropy_tertimbang</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">nilai_fitur_unik</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">nama_fitur</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">nilai</span> <span class="ow">in</span> <span class="n">nilai_fitur_unik</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">nama_fitur</span><span class="p">]</span> <span class="o">==</span> <span class="n">nilai</span><span class="p">]</span>
+        <span class="n">entropy_subset</span> <span class="o">=</span> <span class="n">hitung_entropy</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">nama_target</span><span class="p">])</span>
+        <span class="n">bobot</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">entropy_tertimbang</span> <span class="o">+=</span> <span class="n">bobot</span> <span class="o">*</span> <span class="n">entropy_subset</span>
+
+    <span class="c1"># 3. Hitung Information Gain</span>
+    <span class="n">information_gain</span> <span class="o">=</span> <span class="n">entropy_total</span> <span class="o">-</span> <span class="n">entropy_tertimbang</span>
+    <span class="k">return</span> <span class="n">information_gain</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;═════════════════════════════════════════════════&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;═ HASIL PERHITUNGAN INFORMATION GAIN (MANUAL) ═&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;═════════════════════════════════════════════════</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Hitung untuk &#39;Suhu_Kategori&#39;</span>
+<span class="n">ig_suhu</span> <span class="o">=</span> <span class="n">hitung_information_gain</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Suhu_Kategori&#39;</span><span class="p">,</span> <span class="s1">&#39;Aktivitas&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;▶ Information Gain untuk &#39;Suhu_Kategori&#39;     : </span><span class="si">{</span><span class="n">ig_suhu</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Format dengan 4 desimal</span>
+
+<span class="c1"># Hitung untuk &#39;Kelembaban_Kategori&#39;</span>
+<span class="n">ig_kelembaban</span> <span class="o">=</span> <span class="n">hitung_information_gain</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Kelembaban_Kategori&#39;</span><span class="p">,</span> <span class="s1">&#39;Aktivitas&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;▶ Information Gain untuk &#39;Kelembaban_Kategori&#39; : </span><span class="si">{</span><span class="n">ig_kelembaban</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Format dengan 4 desimal</span>
+
+<span class="c1"># Bandingkan dan tentukan root node</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;──────────────────&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;── Kesimpulan ──&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;──────────────────&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">ig_suhu</span> <span class="o">&gt;</span> <span class="n">ig_kelembaban</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Fitur &#39;Suhu_Kategori&#39; dipilih sebagai root node karena memiliki Gain tertinggi.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Fitur &#39;Kelembaban_Kategori&#39; dipilih sebagai root node karena memiliki Gain tertinggi.&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">💡 Catatan: Hasil ini seharusnya cocok dengan perhitungan manual.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Batas pemisah</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>═════════════════════════════════════════════════
+═ HASIL PERHITUNGAN INFORMATION GAIN (MANUAL) ═
+═════════════════════════════════════════════════
+
+▶ Information Gain untuk &#39;Suhu_Kategori&#39;     : 1.0013
+▶ Information Gain untuk &#39;Kelembaban_Kategori&#39; : 0.5349
+
+──────────────────
+── Kesimpulan ──
+──────────────────
+✓ Fitur &#39;Suhu_Kategori&#39; dipilih sebagai root node karena memiliki Gain tertinggi.
+
+💡 Catatan: Hasil ini seharusnya cocok dengan perhitungan manual.
+
+============================================================
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="implementasi-decision-tree-dengan-scikit-learn-dan-visualisasi">
+<h3>Implementasi Decision Tree dengan Scikit-learn dan Visualisasi<a class="headerlink" href="#implementasi-decision-tree-dengan-scikit-learn-dan-visualisasi" title="Link to this heading">#</a></h3>
+<p>Setelah kita melakukan perhitungan Information Gain secara manual untuk memahami konsepnya, cell kode ini menunjukkan cara yang lebih efisien dan umum digunakan dalam praktik: menggunakan library <strong>Scikit-learn</strong>.</p>
+<p>Berikut adalah langkah-langkah yang dilakukan oleh kode ini:</p>
+<ol class="arabic simple">
+<li><p><strong>Persiapan Data untuk Scikit-learn</strong>:</p>
+<ul class="simple">
+<li><p>Scikit-learn umumnya membutuhkan input data dalam format numerik. Meskipun fitur kategorikal kita sudah dalam bentuk string (<code class="docutils literal notranslate"><span class="pre">'Dingin'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Sedang'</span></code>, dll.), kita perlu mengubahnya menjadi angka.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df_sklearn</span> <span class="pre">=</span> <span class="pre">df.copy()</span></code>: Membuat salinan DataFrame asli agar tidak mengubah data awal.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LabelEncoder()</span></code>: Menginisialisasi objek <code class="docutils literal notranslate"><span class="pre">LabelEncoder</span></code> untuk mengubah label kategorikal menjadi nilai numerik (misalnya, ‘Belajar’ menjadi 0, ‘Bermain’ menjadi 1, ‘Istirahat’ menjadi 2).</p></li>
+<li><p>Looping melalui kolom kategorikal (<code class="docutils literal notranslate"><span class="pre">'Suhu_Kategori'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Kelembaban_Kategori'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Aktivitas'</span></code>), <code class="docutils literal notranslate"><span class="pre">fit_transform()</span></code> digunakan untuk mempelajari pemetaan label ke angka dan menerapkannya pada kolom tersebut. Encoder disimpan dalam dictionary <code class="docutils literal notranslate"><span class="pre">encoders</span></code> untuk digunakan kembali nanti (misalnya saat visualisasi).</p></li>
+</ul>
+</li>
+<li><p><strong>Memisahkan Fitur dan Target</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">df_sklearn[['Suhu_Kategori',</span> <span class="pre">'Kelembaban_Kategori']]</span></code>: Membuat DataFrame <code class="docutils literal notranslate"><span class="pre">X</span></code> yang berisi kolom fitur (independen) yang sudah dinumerisasi.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">df_sklearn['Aktivitas']</span></code>: Membuat Series <code class="docutils literal notranslate"><span class="pre">y</span></code> yang berisi kolom target (dependen) yang sudah dinumerisasi.</p></li>
+</ul>
+</li>
+<li><p><strong>Membangun dan Melatih Model Decision Tree</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dt_classifier</span> <span class="pre">=</span> <span class="pre">DecisionTreeClassifier(criterion='entropy',</span> <span class="pre">random_state=42)</span></code>: Menginisialisasi objek model <code class="docutils literal notranslate"><span class="pre">DecisionTreeClassifier</span></code>.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">criterion='entropy'</span></code>: Menentukan bahwa algoritma harus menggunakan <strong>Entropy</strong> (dan secara implisit Information Gain) sebagai kriteria pemecahan, sama dengan yang kita hitung manual.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>: Mengatur <em>seed</em> untuk memastikan hasil yang konsisten setiap kali kode dijalankan.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dt_classifier.fit(X,</span> <span class="pre">y)</span></code>: Melatih model Decision Tree menggunakan data fitur <code class="docutils literal notranslate"><span class="pre">X</span></code> dan target <code class="docutils literal notranslate"><span class="pre">y</span></code>. Pada langkah ini, Scikit-learn secara otomatis mencari fitur terbaik (dengan Information Gain tertinggi) untuk memecah data di setiap simpul, membangun struktur pohon.</p></li>
+</ul>
+</li>
+<li><p><strong>Visualisasi Pohon Keputusan</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">plt.figure(figsize=(14,</span> <span class="pre">9))</span></code>: Membuat objek figure untuk plot dengan ukuran tertentu.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_tree(...)</span></code>: Fungsi dari Scikit-learn untuk menggambar pohon keputusan.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">dt_classifier</span></code>: Model pohon yang sudah dilatih.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature_names=['Suhu_Kategori',</span> <span class="pre">'Kelembaban_Kategori']</span></code>: Memberikan nama fitur agar terlihat di visualisasi.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">class_names=encoders['Aktivitas'].classes_</span></code>: Mengambil nama kelas asli (‘Belajar’, ‘Bermain’, ‘Istirahat’) dari <code class="docutils literal notranslate"><span class="pre">LabelEncoder</span></code> agar label di simpul pohon mudah dibaca.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filled=True</span></code>, <code class="docutils literal notranslate"><span class="pre">rounded=True</span></code>: Mengatur gaya visualisasi (simpul diisi warna, sudut membulat).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fontsize=12</span></code>: Mengatur ukuran font teks di dalam simpul.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plt.title(...)</span></code>: Menambahkan judul pada plot.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plt.show()</span></code>: Menampilkan plot visualisasi pohon.</p></li>
+</ul>
+</li>
+</ol>
+<p>Hasil visualisasi ini akan menunjukkan struktur pohon yang dibangun oleh Scikit-learn, dan Anda bisa membandingkannya dengan pohon keputusan final yang kita simpulkan dari perhitungan manual.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;█ PERBANDINGAN DENGAN SCIKIT-LEARN (CARA PROFESIONAL)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Scikit-learn membutuhkan semua input berupa angka, jadi kita ubah label menjadi angka</span>
+<span class="n">df_sklearn</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">encoders</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Suhu_Kategori&#39;</span><span class="p">,</span> <span class="s1">&#39;Kelembaban_Kategori&#39;</span><span class="p">,</span> <span class="s1">&#39;Aktivitas&#39;</span><span class="p">]:</span>
+    <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+    <span class="n">df_sklearn</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_sklearn</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+    <span class="n">encoders</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">le</span> <span class="c1"># Simpan encoder untuk referensi</span>
+
+<span class="c1"># Pisahkan fitur (X) dan target (y)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df_sklearn</span><span class="p">[[</span><span class="s1">&#39;Suhu_Kategori&#39;</span><span class="p">,</span> <span class="s1">&#39;Kelembaban_Kategori&#39;</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df_sklearn</span><span class="p">[</span><span class="s1">&#39;Aktivitas&#39;</span><span class="p">]</span>
+
+<span class="c1"># Buat dan latih model Decision Tree</span>
+<span class="c1"># &#39;criterion=&quot;entropy&quot;&#39; digunakan agar perhitungannya sama dengan Information Gain</span>
+<span class="n">dt_classifier</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;entropy&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">dt_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pohon Keputusan yang dibuat oleh Scikit-learn telah selesai &#39;dilatih&#39;.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;berikut hasil visualisasikan pohon tersebut.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Visualisasikan pohonnya</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">plot_tree</span><span class="p">(</span><span class="n">dt_classifier</span><span class="p">,</span>
+          <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Suhu_Kategori&#39;</span><span class="p">,</span> <span class="s1">&#39;Kelembaban_Kategori&#39;</span><span class="p">],</span>
+          <span class="n">class_names</span><span class="o">=</span><span class="n">encoders</span><span class="p">[</span><span class="s1">&#39;Aktivitas&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span> <span class="c1"># Ambil nama kelas asli</span>
+          <span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+          <span class="n">rounded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+          <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Visualisasi Pohon Keputusan dari Scikit-learn&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>█ PERBANDINGAN DENGAN SCIKIT-LEARN (CARA PROFESIONAL)
+
+Pohon Keputusan yang dibuat oleh Scikit-learn telah selesai &#39;dilatih&#39;.
+berikut hasil visualisasikan pohon tersebut.
+</pre></div>
+</div>
+<img alt="_images/d75ff534b9e6c49b8f52aed3ebb206727d47bd51316c439199c3163c3795dff4.png" src="_images/d75ff534b9e6c49b8f52aed3ebb206727d47bd51316c439199c3163c3795dff4.png" />
+</div>
+</div>
+</section>
+<section id="memahami-visualisasi-pohon-keputusan-scikit-learn">
+<h3>Memahami Visualisasi Pohon Keputusan Scikit-learn<a class="headerlink" href="#memahami-visualisasi-pohon-keputusan-scikit-learn" title="Link to this heading">#</a></h3>
+<p>Visualisasi yang dihasilkan oleh <code class="docutils literal notranslate"><span class="pre">plot_tree</span></code> dari <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> adalah representasi grafis dari pohon keputusan yang telah dilatih. Diagram ini merangkum hasil dari proses pembentukan pohon, termasuk simpul pemecahan (splitting nodes) dan daun (leaves).</p>
+<p>Mari kita bedah secara mendetail maksud dari setiap elemen di dalam kotak-kotak (disebut <strong>node</strong> atau simpul) tersebut, menggunakan <strong>node paling atas (akar)</strong> sebagai contoh utama.</p>
+<hr class="docutils" />
+<section id="struktur-dan-informasi-dalam-setiap-node">
+<h4><strong>Struktur dan Informasi dalam Setiap Node</strong><a class="headerlink" href="#struktur-dan-informasi-dalam-setiap-node" title="Link to this heading">#</a></h4>
+<p>Setiap kotak pada diagram ini (kecuali node daun) memberikan beberapa informasi penting:</p>
+<ol class="arabic simple">
+<li><p><strong>Aturan Keputusan (Decision Rule)</strong></p>
+<ul class="simple">
+<li><p>Contoh: <code class="docutils literal notranslate"><span class="pre">Suhu_Kategori</span> <span class="pre">&lt;=</span> <span class="pre">0.5</span></code></p></li>
+<li><p>Ini adalah kondisi yang digunakan node ini untuk memecah data. Data yang memenuhi kondisi ini akan mengikuti cabang kiri, sedangkan yang tidak memenuhi akan mengikuti cabang kanan.</p></li>
+<li><p><strong>Penting:</strong> <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> menggunakan representasi numerik untuk fitur kategorikal. <code class="docutils literal notranslate"><span class="pre">Suhu_Kategori</span></code> telah di-<em>encode</em> menjadi angka (misalnya, ‘Dingin’=0, ‘Sedang’=1, ‘Panas’=2 atau urutan lain tergantung <code class="docutils literal notranslate"><span class="pre">LabelEncoder</span></code>). Jadi, <code class="docutils literal notranslate"><span class="pre">Suhu_Kategori</span> <span class="pre">&lt;=</span> <span class="pre">0.5</span></code> setara dengan memeriksa apakah <code class="docutils literal notranslate"><span class="pre">Suhu_Kategori</span></code> adalah kategori yang <em>di-encode</em> dengan nilai 0 (dalam kasus ini, kemungkinan ‘Dingin’).</p></li>
+</ul>
+</li>
+<li><p><strong>Entropy (Ukuran Ketidakpastian)</strong></p>
+<ul class="simple">
+<li><p>Contoh: <code class="docutils literal notranslate"><span class="pre">entropy</span> <span class="pre">=</span> <span class="pre">1.585</span></code></p></li>
+<li><p>Ini menunjukkan nilai <strong>Entropy</strong> dari semua data yang masuk ke node ini <em>sebelum</em> pemecahan dilakukan oleh aturan keputusan di node tersebut.</p></li>
+<li><p>Untuk node akar, ini adalah Entropy Total dari seluruh dataset awal, yang harusnya <strong>konsisten</strong> dengan perhitungan manual kita.</p></li>
+</ul>
+</li>
+<li><p><strong>Jumlah Sampel (Number of Samples)</strong></p>
+<ul class="simple">
+<li><p>Contoh: <code class="docutils literal notranslate"><span class="pre">samples</span> <span class="pre">=</span> <span class="pre">15</span></code></p></li>
+<li><p>Ini adalah jumlah total sampel (baris data) yang mencapai node ini.</p></li>
+<li><p>Di node akar, ini adalah jumlah total data dalam dataset.</p></li>
+</ul>
+</li>
+<li><p><strong>Distribusi Kelas (Class Distribution)</strong></p>
+<ul class="simple">
+<li><p>Contoh: <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[5,</span> <span class="pre">5,</span> <span class="pre">5]</span></code></p></li>
+<li><p>Ini adalah daftar yang menunjukkan jumlah sampel untuk setiap kelas target <em>dalam urutan alfabetis atau urutan encoding</em> yang digunakan oleh <code class="docutils literal notranslate"><span class="pre">LabelEncoder</span></code>.</p></li>
+<li><p>Misalnya, jika kelas target Anda adalah [‘Belajar’, ‘Bermain’, ‘Istirahat’] dan di-<em>encode</em> menjadi [0, 1, 2], maka <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[5,</span> <span class="pre">5,</span> <span class="pre">5]</span></code> berarti ada 5 sampel untuk kelas 0 (Belajar), 5 untuk kelas 1 (Bermain), dan 5 untuk kelas 2 (Istirahat).</p></li>
+</ul>
+</li>
+<li><p><strong>Kelas Mayoritas (Majority Class)</strong></p>
+<ul class="simple">
+<li><p>Contoh: <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">=</span> <span class="pre">Belajar</span></code> (Ini akan muncul di node daun atau jika node tidak perlu dipecah lagi)</p></li>
+<li><p>Ini adalah prediksi kelas untuk semua sampel yang mencapai node ini. Ini ditentukan berdasarkan kelas mayoritas dari <code class="docutils literal notranslate"><span class="pre">value</span></code> pada node tersebut.</p></li>
+<li><p>Node yang menampilkan <code class="docutils literal notranslate"><span class="pre">class</span></code> tanpa aturan keputusan lebih lanjut adalah <strong>node daun (leaf node)</strong>, yang merupakan titik akhir dari sebuah jalur keputusan.</p></li>
+</ul>
+</li>
+</ol>
+<p>Dengan memahami elemen-elemen ini di setiap node, kita dapat “membaca” jalur yang diambil oleh setiap sampel data melalui pohon dan bagaimana pohon tersebut sampai pada prediksinya.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="kesimpulan">
+<h2>Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
+<p>Dalam notebook ini, kita telah menjelajahi algoritma Decision Tree mulai dari konsep dasarnya hingga implementasi praktis.</p>
+<ol class="arabic simple">
+<li><p><strong>Memahami Teori</strong>: Kita memulai dengan memahami konsep inti seperti Entropy (ukuran ketidakpastian) dan Information Gain (efektivitas fitur dalam mengurangi ketidakpastian).</p></li>
+<li><p><strong>Perhitungan Manual</strong>: Kita melakukan perhitungan Information Gain secara manual untuk setiap fitur (<code class="docutils literal notranslate"><span class="pre">Suhu</span></code> dan <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code>) pada dataset contoh, yang memungkinkan kita melihat secara langsung bagaimana fitur terbaik dipilih sebagai simpul akar (root node).</p></li>
+<li><p><strong>Implementasi dengan Scikit-learn</strong>: Kita kemudian melihat bagaimana library Scikit-learn mengotomatisasi proses ini menggunakan <code class="docutils literal notranslate"><span class="pre">DecisionTreeClassifier</span></code>. Kita melatih model dengan data yang sama.</p></li>
+<li><p><strong>Visualisasi</strong>: Terakhir, kita memvisualisasikan pohon keputusan yang dihasilkan oleh Scikit-learn, dan mempelajari cara membaca setiap node (simpul) untuk memahami aturan keputusan, entropy, jumlah sampel, distribusi kelas, dan prediksi akhir.</p></li>
+</ol>
+<p>Melalui perbandingan antara perhitungan manual dan implementasi dengan Scikit-learn, kita dapat melihat bagaimana prinsip-prinsip Decision Tree diterapkan dalam praktik. Pemilihan fitur berdasarkan Information Gain atau kriteria serupa adalah langkah kunci dalam membangun pohon yang efektif untuk klasifikasi.</p>
+<hr class="docutils" />
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Fuzzy_C_Mean_Clustering.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><strong>Fuzzy C-Mean Clustering</strong></p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#studi-kasus-dataset-prediksi-aktivitas">Studi Kasus: Dataset Prediksi Aktivitas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-lengkap">Perhitungan Manual Lengkap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsep-dan-rumus-inti">Konsep dan Rumus Inti</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entropy-ukuran-ketidakpastian"><strong>1. Entropy (Ukuran Ketidakpastian)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#information-gain-pengurangan-ketidakpastian"><strong>2. Information Gain (Pengurangan Ketidakpastian)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-pembangunan-pohon-lengkap-dengan-perhitungan"><strong>Proses Pembangunan Pohon (Lengkap dengan Perhitungan)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-entropy-total-dataset-entropy-s"><strong>Langkah 1: Menghitung Entropy Total Dataset (Entropy(S))</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-menentukan-node-akar-root-node"><strong>Langkah 2: Menentukan Node Akar (Root Node)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-analisis-fitur-suhu"><strong>A. Analisis Fitur <code class="docutils literal notranslate"><span class="pre">Suhu</span></code></strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-analisis-fitur-kelembaban"><strong>B. Analisis Fitur <code class="docutils literal notranslate"><span class="pre">Kelembaban</span></code></strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#c-keputusan-node-akar"><strong>C. Keputusan Node Akar</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-membangun-cabang-dan-sub-cabang"><strong>Langkah 3: Membangun Cabang dan Sub-Cabang</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-akhir-pohon-keputusan-final"><strong>Hasil Akhir: Pohon Keputusan Final</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-decision-tree-dengan-scikit-learn">Implementasi Decision Tree dengan Scikit-learn</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-data-dan-diskretisasi">Persiapan Data dan Diskretisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fungsi-hitung-entropy">Fungsi <code class="docutils literal notranslate"><span class="pre">hitung_entropy</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-fitur-terbaik-dengan-information-gain">Menentukan Fitur Terbaik dengan Information Gain</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-decision-tree-dengan-scikit-learn-dan-visualisasi">Implementasi Decision Tree dengan Scikit-learn dan Visualisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-visualisasi-pohon-keputusan-scikit-learn">Memahami Visualisasi Pohon Keputusan Scikit-learn</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-dan-informasi-dalam-setiap-node"><strong>Struktur dan Informasi dalam Setiap Node</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Yudha Caesar Maulana
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
